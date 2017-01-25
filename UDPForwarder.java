@@ -81,8 +81,6 @@ public class UDPForwarder extends ActivityExecutor {
         
         mLogger.message("Got execute for action name="+a_name+", type="+a_type
                 +", actor="+a_actor+", mode="+a_mode);
-        mLogger.message(String.format("Got execute for action name=%s, type=%s, actor=%s, mode=%s",
-                        a_name, a_type, a_actor, a_mode));
         
         LinkedList<ActionFeature> a_features = activity.getFeatures();
         if(a_features != null) {
@@ -103,28 +101,32 @@ public class UDPForwarder extends ActivityExecutor {
         if (activity instanceof SpeechActivity) {
             SpeechActivity sa = (SpeechActivity) activity;
                                    
+            String sa_textonly = sa.getTextOnly(BLOCK_PREFIX).trim();
+            String sa_punct = sa.getPunct();
+            
+            mLogger.message("===UDPSSS This is a SpeechActivity. Text='"+sa_textonly+"', Punct="+sa_punct);
             //
             // broadcast the text on the network.
-            String activityText = sa.getTextOnly(BLOCK_PREFIX).trim();
-            mLogger.message("Activity text="+activityText);
-            broadcastMessage(activityText);
+            broadcastMessage(sa_textonly);
             
-            // Buggy...
-            /*
-            mLogger.message("Forwarding blocks to the ActivityScheduler...");
+            //
+            // The following lines of code will extract all the Action blocks
+            // from the speech and forward them to the global scheduler in
+            // order to trigger the execution of the ActionActivities.
             LinkedList<String> timemarks = sa.getTimeMarks(BLOCK_PREFIX);
             for (String tm : timemarks) {
                 mProject.getRunTimePlayer().getActivityScheduler().handle(tm);
             }
-            mLogger.message("All blocks forwarded.");
-            */
             
-
         } else if (activity instanceof ActionActivity) {
             ActionActivity aa = (ActionActivity) activity;
             
             String aa_text = aa.getText();
-            // mLogger.message("This is an ActionActivity. Text="+aa_text);
+            mLogger.message("===UDPAAA This is an ActionActivity. Text="+aa_text);
+
+            //
+            // broadcast the text on the network.
+            broadcastMessage(aa_text);
 
         } else {
             mLogger.warning("Unhandled Activity subclass: " + activity.getClass().getName()) ;
@@ -174,11 +176,12 @@ public class UDPForwarder extends ActivityExecutor {
             //
             Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces(); 
             while (interfaces.hasMoreElements()) {
-		NetworkInterface networkInterface = interfaces.nextElement();
 
-		if (networkInterface.isLoopback() || !networkInterface.isUp()) {    // TODO test
+        		NetworkInterface networkInterface = interfaces.nextElement();
+
+        		if (networkInterface.isLoopback() || !networkInterface.isUp()) {    // TODO test
                     continue; // Don't want to broadcast to inactive inferfaces
-		}
+        		}
 
                 for (InterfaceAddress interfaceAddress : networkInterface.getInterfaceAddresses()) {
                     InetAddress broadcast = interfaceAddress.getBroadcast();
@@ -188,6 +191,7 @@ public class UDPForwarder extends ActivityExecutor {
                     
                     mBroadcastAddresses.add(broadcast) ;
                 }
+                
             }
 
         } catch (SocketException ex) {

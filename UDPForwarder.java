@@ -53,7 +53,7 @@ public class UDPForwarder extends ActivityExecutor {
         super(config, project);
         ArrayList<ConfigFeature> configFeatures = mConfig.getEntryList();
         mLogger.message("Found " + configFeatures.size() + " features:");
-        for(ConfigFeature cf: configFeatures) {
+        for (ConfigFeature cf: configFeatures) {
             mLogger.message(String.format(" - key=%s, name=%s, value=%s", cf.getKey(), cf.getName(), cf.getValue()));
         }
 
@@ -63,7 +63,7 @@ public class UDPForwarder extends ActivityExecutor {
     /** This serves to create a unique prefix for your blocks. */
     @Override
     public String marker(long id) {
-        return BLOCK_PREFIX+id ;
+        return BLOCK_PREFIX + id ;
     }
 
     
@@ -79,8 +79,9 @@ public class UDPForwarder extends ActivityExecutor {
         String a_actor = activity.getActor();
         String a_mode = activity.getMode();
         
-        mLogger.message("Got execute for action name="+a_name+", type="+a_type
-                +", actor="+a_actor+", mode="+a_mode);
+        mLogger.message(
+                    String.format("Got execute for action name=%s, type=%s, type=, actor=, mode=",
+                                a_name, a_type, a_actor, a_mode));
         
         LinkedList<ActionFeature> a_features = activity.getFeatures();
         if(a_features != null) {
@@ -177,11 +178,11 @@ public class UDPForwarder extends ActivityExecutor {
             Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces(); 
             while (interfaces.hasMoreElements()) {
 
-        		NetworkInterface networkInterface = interfaces.nextElement();
+                NetworkInterface networkInterface = interfaces.nextElement();
 
-        		if (networkInterface.isLoopback() || !networkInterface.isUp()) {    // TODO test
+                if (networkInterface.isLoopback() || !networkInterface.isUp()) {    // TODO test
                     continue; // Don't want to broadcast to inactive inferfaces
-        		}
+                }
 
                 for (InterfaceAddress interfaceAddress : networkInterface.getInterfaceAddresses()) {
                     InetAddress broadcast = interfaceAddress.getBroadcast();

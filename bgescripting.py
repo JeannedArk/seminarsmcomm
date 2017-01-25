@@ -14,33 +14,10 @@ https://docs.python.org/2/howto/sockets.html
 """
 
 def init():
-    global last_time
-    print("Hello")
+    print("UDPSceneMakerCommunication init")
     bge.render.showMouse(True)
 
-    last_time = time.time()
-
 def keypressed():
-    global myx
-    #global scene
     print("key pressed")
 
-    myx += 0.1
-    print(str(myx))
-
-    co = bge.logic.getCurrentController()
-    obj = co.owner
-    obj.localPosition.x += 0.05
-
-    scene = obj.scene
-    cube = scene.objects["Cube"]
-    cube.localPosition.z += 0.2
-
 def update():
-    global last_time
-    now = time.time()
-
-    dt = now - last_time
-    print("dt="+str(dt))
-
-    last_time = now

@@ -11,5 +11,9 @@
 {
   "type": "speech",
   "object": "Anna", // (or design as a list?),
-  "text": "text"
+  "text": "text",
+  "mood": "happy" // (angry),
+  // the msgs are splitted so for a speech object in the beginning it is not known
+  // if it belongs to a question
+  "mode": "question"
 }

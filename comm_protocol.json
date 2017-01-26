@@ -1,8 +1,15 @@
 {
-  "object": "Anna", (or design as a list?)
+  "type": "action",
+  "object": "Anna", // (or design as a list?)
   "name": "wave",
   "speed": "fast",
   "duration": 0.01,
-  "mode": "play" (stop, hold, continue),
+  "mode": "play" // (stop, hold, continue),
   "description": "desc"
+}
+
+{
+  "type": "speech",
+  "object": "Anna", // (or design as a list?),
+  "text": "text"
 }

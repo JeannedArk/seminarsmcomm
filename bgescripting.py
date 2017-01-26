@@ -13,7 +13,7 @@ UDP_PORT = 23000
 # ein TPC-socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-
+finished = False
 
 
 """
@@ -29,13 +29,15 @@ def keypressed():
     print("key pressed")
 
 def update():
-    while 1:    # Endlosschleife
-        data, addr = sock.recvfrom( 1024 )
-        # Puffer-Größe ist 1024 Bytes.
-        # Die Puffergröße muss immer eine Potenz
-        # von 2 sein
-        print("empfangene Nachricht:", data)
-        print()"Clientadresse:", addr)         # Adresse besteht aus IP und Port
+    if not finished:
+        try:
+            #while 1:    # Endlosschleife
+            # buffer size must be a power of 2
+            data, addr = sock.recvfrom(1024)
+            print("empfangene Nachricht:", data)
+            print("Clientadresse:", addr)         # Adresse besteht aus IP und Port
+        except socket.error, msg:
+            print("socket timeout " + msg)
 
 def send(msg):
     print("Message:", msg)

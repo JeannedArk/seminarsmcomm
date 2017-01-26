@@ -1,0 +1,8 @@
+{
+  "object": "Anna", (or design as a list?)
+  "name": "wave",
+  "speed": "fast",
+  "duration": 0.01,
+  "mode": "play" (stop, hold, continue),
+  "description": "desc"
+}

@@ -3,17 +3,56 @@ import time
 import socket
 import asyncio
 
+
 # UDP setup
 UDP_IP = "127.0.0.1"
 UDP_PORT = 23000
+
+
+class EchoClientProtocol:
+    def __init__(self, loop):
+        self.loop = loop
+        self.transport = None
+
+    def connection_made(self, transport):
+        self.transport = transport
+        print("connection_made")
+        #print('Send:', self.message)
+        #self.transport.sendto(self.message.encode())
+
+    def datagram_received(self, data, addr):
+        print("Received:", data.decode())
+
+        print("Close the socket")
+        self.transport.close()
+
+    def error_received(self, exc):
+        print('Error received:', exc)
+
+    def connection_lost(self, exc):
+        print("Socket closed, stop the event loop")
+        loop = asyncio.get_event_loop()
+        loop.stop()
+
+
+
+loop = asyncio.get_event_loop()
+connect = loop.create_datagram_endpoint(
+    lambda: EchoClientProtocol(loop),
+    remote_addr=(UDP_IP, UDP_PORT))
+transport, protocol = loop.run_until_complete(connect)
+loop.run_forever()
+transport.close()
+loop.close()
+
+
+
 # Die Konstante AF_INET steht für Adressfamilie Internet.
 # Die Konstante SOCK_DGRAM steht für das UDP-Protokoll.
 # Dies sind optionale Eingaben für eine Socket-Instanz.
 # Voreingestellt ist AF_INET und als Protokoll SockStream, dies steht für
 # ein TPC-socket
-sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-
-#loop = asyncio.get_event_loop()
+#sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 finished = False
 
@@ -31,6 +70,7 @@ def keypressed():
     print("key pressed")
 
 def update():
+    """
     if not finished:
         try:
             #while 1:    # Endlosschleife
@@ -42,6 +82,7 @@ def update():
             print("socket timeout " + sys.exc_info()[0])
         except:
             print("Unexpected error:", sys.exc_info()[0])
+    """
 
 def send(msg):
     print("Message:", msg)

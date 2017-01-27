@@ -5,31 +5,14 @@ import _thread
 import queue
 import json
 
+from Activity import *
+
 """
-UDPSceneMakerCommunication
+SceneMakerCommunication
 
 https://docs.python.org/2/howto/sockets.html
 https://docs.python.org/3/library/queue.html
 """
-
-class ActionActivity(object):
-    def __init__(self, atype, nameaction, object, name):
-        self.atype = atype
-        self.nameaction = nameaction
-        self.object = object
-        self.name = name
-
-    def __str__(self):
-        return "ActionActivity(object: " + self.object + " name: " + self.name + ")"
-
-class SpeechActivity(object):
-    def __init__(self, atype, object, text):
-        self.atype = atype
-        self.object = object
-        self.text = text
-
-    def __str__(self):
-        return "SpeechActivity(object: " + self.object + " text: " + self.text + ")"
 
 # UDP setup
 # "127.0.0.1" does not work
@@ -69,13 +52,13 @@ def fetch_data():
             print(msg)
 
 def init():
-    print("UDPSceneMakerCommunication init")
+    print("SceneMakerCommunication init")
     bge.render.showMouse(True)
     _thread.start_new_thread(fetch_data, ())
 
 def end():
     global finished
-    print("UDPSceneMakerCommunication end")
+    print("SceneMakerCommunication end")
 
     # Kill thread
     finished = True

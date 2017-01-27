@@ -8,10 +8,6 @@ import _thread
 UDP_IP = "127.0.0.1"
 UDP_PORT = 23000
 
-
-
-
-
 # Die Konstante AF_INET steht für Adressfamilie Internet.
 # Die Konstante SOCK_DGRAM steht für das UDP-Protokoll.
 # Dies sind optionale Eingaben für eine Socket-Instanz.
@@ -20,8 +16,6 @@ UDP_PORT = 23000
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 finished = False
-
-#integer = 0
 
 """
 https://docs.python.org/3/library/asyncio-eventloop.html

@@ -17,7 +17,7 @@ UDP_PORT = 23000
 # Dies sind optionale Eingaben für eine Socket-Instanz.
 # Voreingestellt ist AF_INET und als Protokoll SockStream, dies steht für
 # ein TPC-socket
-#sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 finished = False
 
@@ -55,20 +55,8 @@ def keypressed():
     #end game engine
 
 def update():
-    print("update: ")
-    """
-    if not finished:
-        try:
-            #while 1:    # Endlosschleife
-            # buffer size must be a power of 2
-            data, addr = sock.recvfrom(1024)
-            print("Received msg:", data)
-            print("Clientadresse:", addr)         # Adresse besteht aus IP und Port
-        except socket.error:
-            print("socket timeout " + sys.exc_info()[0])
-        except:
-            print("Unexpected error:", sys.exc_info()[0])
-    """
+    #print("update: ")
+    pass
 
 
 def send(msg):

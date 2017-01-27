@@ -1,16 +1,16 @@
+// https://docs.blender.org/api/blender_python_api_2_76_2/bge.types.KX_GameObject.html
 {
   "type": "action",
-  "object": "Anna", // (or design as a list?)
+  "nameaction": "playAction", // light
+  "object": "Anna",
   "name": "wave",
   "speed": "fast",
-  "duration": 0.01,
-  "mode": "play" // (stop, hold, continue),
-  "description": "desc"
+  "duration": 0.01
 }
 
 {
   "type": "speech",
-  "object": "Anna", // (or design as a list?),
+  "object": "Anna",
   "text": "text",
   "mood": "happy" // (angry),
   // the msgs are splitted so for a speech object in the beginning it is not known

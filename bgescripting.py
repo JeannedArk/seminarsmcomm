@@ -1,7 +1,7 @@
 import bge
 import time
 import socket
-import asyncio
+import _thread
 
 
 # UDP setup
@@ -9,41 +9,6 @@ UDP_IP = "127.0.0.1"
 UDP_PORT = 23000
 
 
-class EchoClientProtocol:
-    def __init__(self, loop):
-        self.loop = loop
-        self.transport = None
-
-    def connection_made(self, transport):
-        self.transport = transport
-        print("connection_made")
-        #print('Send:', self.message)
-        #self.transport.sendto(self.message.encode())
-
-    def datagram_received(self, data, addr):
-        print("Received:", data.decode())
-
-        print("Close the socket")
-        self.transport.close()
-
-    def error_received(self, exc):
-        print('Error received:', exc)
-
-    def connection_lost(self, exc):
-        print("Socket closed, stop the event loop")
-        loop = asyncio.get_event_loop()
-        loop.stop()
-
-
-
-loop = asyncio.get_event_loop()
-connect = loop.create_datagram_endpoint(
-    lambda: EchoClientProtocol(loop),
-    remote_addr=(UDP_IP, UDP_PORT))
-transport, protocol = loop.run_until_complete(connect)
-loop.run_forever()
-transport.close()
-loop.close()
 
 
 
@@ -56,20 +21,41 @@ loop.close()
 
 finished = False
 
+#integer = 0
 
 """
 https://docs.python.org/3/library/asyncio-eventloop.html
 https://docs.python.org/2/howto/sockets.html
 """
 
+def fetch_data():
+    print("-fetch data-")
+    while not finished:
+        try:
+            print("fetch data while")
+            # buffer size must be a power of 2
+            data, addr = sock.recvfrom(1024)
+            print("Rec msg:", data)
+            print("Clientadresse:", addr)
+        except:
+            pass
+            #print("socket timeout ")
+
 def init():
     print("UDPSceneMakerCommunication init")
     bge.render.showMouse(True)
+    _thread.start_new_thread(fetch_data, ())
 
+#TODO naming
 def keypressed():
+    global finished
     print("key pressed")
+    finished = True
+    bge.logic.endGame()
+    #end game engine
 
 def update():
+    print("update: ")
     """
     if not finished:
         try:
@@ -83,6 +69,7 @@ def update():
         except:
             print("Unexpected error:", sys.exc_info()[0])
     """
+
 
 def send(msg):
     print("Message:", msg)

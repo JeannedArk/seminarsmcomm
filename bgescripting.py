@@ -7,24 +7,22 @@ import json
 
 class ActionActivity(object):
     def __init__(self, atype, nameaction, object, name):
-        print(atype)
         self.atype = atype
         self.nameaction = nameaction
         self.object = object
         self.name = name
 
     def __str__(self):
-        return "ActionActivity(object: " + self.object + ")"
+        return "ActionActivity(object: " + self.object + " name: " + self.name + ")"
 
 class SpeechActivity(object):
     def __init__(self, atype, object, text):
-        print(atype)
         self.atype = atype
         self.object = object
         self.text = text
 
     def __str__(self):
-        return "SpeechActivity(object: " + self.object + ")"
+        return "SpeechActivity(object: " + self.object + " text: " + self.text + ")"
 
 # UDP setup
 # "127.0.0.1" does not work
@@ -47,18 +45,12 @@ https://docs.python.org/3/library/queue.html
 
 def message_to_json(msg):
     j = json.loads(msg)
-    print("message_to_json: " + msg)
     if "\"atype\": \"action\"" in msg:
-        print("action")
-        a = ActionActivity(**j)
-        print("action")
-        return a
+        return ActionActivity(**j)
     elif "\"atype\": \"speech\"" in msg:
-        print("speech")
-        a = SpeechActivity(**j)
-        print("speech")
         return SpeechActivity(**j)
     else:
+        print("Not a known type")
         raise Exception("Not a known type")
 
 def fetch_data():
@@ -68,16 +60,11 @@ def fetch_data():
     while not finished:
         try:
             data, addr = sock.recvfrom(BYTE_LENGTH)
-            #print("Rec msg:", data.decode())
             activity = message_to_json(data.decode())
-            print("act: " + str(activity)
-            #q.put(activity)
-
-        #except socket.error:
-        #    pass
-        except ValueError as msg:
+            #print("act: " + str(activity))
+            q.put(activity)
+        except Exception as msg:
             print(msg)
-
 
 def init():
     print("UDPSceneMakerCommunication init")
@@ -98,10 +85,7 @@ def keypressed():
 
 
 def update():
-    #print("update: ")
     global q
-    #get data if there
-    #if not q.empty():
-        #data = q.get()
-        #print("update: " + str(data))
-    #TODO do something with the data
+    if not q.empty():
+        data = q.get()
+        print("update: " + str(data))

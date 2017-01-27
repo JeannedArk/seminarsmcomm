@@ -5,6 +5,13 @@ import _thread
 import queue
 import json
 
+"""
+UDPSceneMakerCommunication
+
+https://docs.python.org/2/howto/sockets.html
+https://docs.python.org/3/library/queue.html
+"""
+
 class ActionActivity(object):
     def __init__(self, atype, nameaction, object, name):
         self.atype = atype
@@ -38,10 +45,6 @@ sock.bind((UDP_IP, UDP_PORT))
 finished = False
 q = queue.Queue()
 
-"""
-https://docs.python.org/2/howto/sockets.html
-https://docs.python.org/3/library/queue.html
-"""
 
 def message_to_json(msg):
     j = json.loads(msg)
@@ -55,7 +58,6 @@ def message_to_json(msg):
 
 def fetch_data():
     global q
-    print("-fetch data-")
 
     while not finished:
         try:
@@ -71,10 +73,9 @@ def init():
     bge.render.showMouse(True)
     _thread.start_new_thread(fetch_data, ())
 
-#TODO naming
-def keypressed():
+def end():
     global finished
-    print("key pressed")
+    print("UDPSceneMakerCommunication end")
 
     # Kill thread
     finished = True
@@ -82,7 +83,6 @@ def keypressed():
     sock.close()
     # End game engine
     bge.logic.endGame()
-
 
 def update():
     global q

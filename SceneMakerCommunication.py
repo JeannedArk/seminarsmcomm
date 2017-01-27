@@ -1,4 +1,5 @@
 import bge
+import GameLogic
 import time
 import socket
 import _thread
@@ -67,8 +68,20 @@ def end():
     # End game engine
     bge.logic.endGame()
 
+def execute(activity):
+    c = GameLogic.getCurrentController()
+    print(">" + activity.atype + "<")
+    #if activity.atype is "action":
+    print("name: " + activity.name)
+    if "wave" in activity.name:
+        print("wave")
+        act = c.getActuator("wave")
+        g.addActiveActuator(act, 1)     #play the action
+
+
 def update():
     global q
     if not q.empty():
         data = q.get()
         print("update: " + str(data))
+        execute(data)

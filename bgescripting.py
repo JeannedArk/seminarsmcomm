@@ -4,24 +4,20 @@ import socket
 import _thread
 import queue
 
-
-
 # UDP setup
-UDP_IP = "127.0.0.1"
+# "127.0.0.1" does not work
+UDP_IP = "192.168.0.255"
 UDP_PORT = 23000
-
-# Die Konstante AF_INET steht für Adressfamilie Internet.
-# Die Konstante SOCK_DGRAM steht für das UDP-Protokoll.
-# Dies sind optionale Eingaben für eine Socket-Instanz.
-# Voreingestellt ist AF_INET und als Protokoll SockStream, dies steht für
-# ein TPC-socket
+# A msg is typically 40 bytes long, so this is just for safety
+BYTE_LENGTH = 256
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+sock.bind((UDP_IP, UDP_PORT))
+
 finished = False
 q = queue.Queue()
 
 """
-https://docs.python.org/3/library/asyncio-eventloop.html
 https://docs.python.org/2/howto/sockets.html
 https://docs.python.org/3/library/queue.html
 """
@@ -32,16 +28,14 @@ def fetch_data():
 
     while not finished:
         try:
-            print("fetch data while")
             # buffer size must be a power of 2
-            data, addr = sock.recvfrom(1024)
+            data, addr = sock.recvfrom(BYTE_LENGTH)
             print("Rec msg:", data)
             print("Clientadresse:", addr)
             q.put(data)
-            
+
         except:
             pass
-            #print("socket timeout ")
 
 def init():
     print("UDPSceneMakerCommunication init")
@@ -66,8 +60,3 @@ def update():
     if not q.empty():
         data = q.get()
     #TODO do something with the data
-
-
-def send(msg):
-    print("Message:", msg)
-    sock.sendto(msg, (UDP_IP, UDP_PORT))

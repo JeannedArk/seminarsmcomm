@@ -70,13 +70,18 @@ def end():
 
 def execute(activity):
     c = GameLogic.getCurrentController()
-    print(">" + activity.atype + "<")
+    #print(">" + activity.atype + "<")
     #if activity.atype is "action":
-    print("name: " + activity.name)
-    if "wave" in activity.name:
-        print("wave")
-        act = c.getActuator("wave")
-        g.addActiveActuator(act, 1)     #play the action
+    if activity.atype == "action":
+        print("name: " + activity.name)
+        if "wave" in activity.name:
+            print("wave")
+            cont = bge.logic.getCurrentController()
+            own = cont.owner
+            print("parent: " + str(own.parent))
+            print("activity: " + str(activity))
+            own.playAction("wave", 1, 30, play_mode=1) # does not work yet
+
 
 
 def update():

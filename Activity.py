@@ -6,7 +6,7 @@ class ActionActivity(object):
         self.name = name
 
     def __str__(self):
-        return "ActionActivity(object: " + self.object + " name: " + self.name + ")"
+        return  "ActionActivity(object: " + self.object + " name: " + self.name + " nameaction: " + self.nameaction + ")"
 
 class SpeechActivity(object):
     def __init__(self, atype, object, text):

@@ -104,8 +104,11 @@ public class UDPForwarder extends ActivityExecutor {
         if (activity instanceof SpeechActivity) {
             SpeechActivity sa = (SpeechActivity) activity;
 
+            String sa_textonly = sa.getTextOnly(BLOCK_PREFIX).trim();
+            String sa_punct = sa.getPunct();
+            
             // broadcast the text on the network.
-            broadcastMessage(sa.toJson());
+            broadcastMessage(sa_textonly);
             
             //
             // The following lines of code will extract all the Action blocks
@@ -117,9 +120,11 @@ public class UDPForwarder extends ActivityExecutor {
             }
             
         } else if (activity instanceof ActionActivity) {
+            ActionActivity aa = (ActionActivity) activity;
+            String aa_text = aa.getText();
             
             // broadcast the text on the network.
-            broadcastMessage(activity.toJson());
+            broadcastMessage(aa_text);
 
         } else {
             mLogger.warning("Unhandled Activity subclass: " + activity.getClass().getName()) ;
@@ -184,6 +189,7 @@ public class UDPForwarder extends ActivityExecutor {
                         continue;
                     }
                     
+//                    System.out.println(PREFIX + broadcast);
                     mBroadcastAddresses.add(broadcast) ;
                 }
                 

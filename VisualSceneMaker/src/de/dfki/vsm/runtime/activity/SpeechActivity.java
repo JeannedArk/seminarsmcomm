@@ -104,14 +104,4 @@ public final class SpeechActivity extends AbstractActivity {
         return builder.toString();
     }
     
-    @Override
-    public final String toJson() {
-        String json = "{\n";
-        json += "\"atype\": \"speech\",";
-        json += "\"object\": " + "\"" + getActor() + "\"" + ",";
-        json += "\"text\": " + "\"" + getTextOnly("\\UDPFwd=").trim() + "\"";
-        json += "\n}";
-        return json;
-    }
-    
 }

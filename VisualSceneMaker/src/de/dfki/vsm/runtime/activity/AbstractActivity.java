@@ -97,7 +97,5 @@ public abstract class AbstractActivity {
 
     // Get the textual representation
     public abstract String getText();
-
-    public abstract String toJson();
     
 }

@@ -43,15 +43,4 @@ public final class ActionActivity extends AbstractActivity {
         return mText;
     }
     
-    @Override
-    public final String toJson() {
-        String json = "{\n";
-        json += "\"atype\": \"action\",";
-        json += "\"object\": " + "\"" + getActor() + "\"" + ",";
-        json += "\"nameaction\": " + "\"" + getName() + "\"" + ",";
-        json += "\"name\": " + "\"" + getText() + "\"";
-        json += "\n}";
-        return json;
-    }
-    
 }

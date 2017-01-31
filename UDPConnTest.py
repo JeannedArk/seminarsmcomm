@@ -9,7 +9,8 @@ import socket
 
 # UDP setup
 #UDP_IP = "127.0.0.1"
-UDP_IP = "192.168.0.255"
+UDP_IP = "10.9.23.255"
+#UDP_IP = "192.168.0.255"
 UDP_PORT = 23000
 
 # not SOCK_STREAM

@@ -62,9 +62,4 @@ public final class ActionMouthActivity extends AbstractActivity {
         return word;
     }
     
-    @Override
-    public final String toJson() {
-        return "{}";
-    }
-    
 }

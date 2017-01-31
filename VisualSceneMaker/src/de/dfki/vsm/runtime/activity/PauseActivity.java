@@ -26,10 +26,5 @@ public final class PauseActivity extends AbstractActivity {
     public String getText() {
         return null;
     }
-    
-    @Override
-    public final String toJson() {
-        return "{}";
-    }
 
 }

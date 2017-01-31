@@ -4,7 +4,7 @@ import time
 import socket
 import _thread
 import queue
-import json
+import re
 
 from Activity import *
 
@@ -24,21 +24,28 @@ BYTE_LENGTH = 256
 
 # Socket setup
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-sock.bind((UDP_IP, UDP_PORT))
+try:
+    sock.bind((UDP_IP, UDP_PORT))
+except:
+    sock.bind(("10.9.23.255", UDP_PORT)) # at Uni
 
 finished = False
 q = queue.Queue()
 
 
-def message_to_json(msg):
-    j = json.loads(msg)
-    if "\"atype\": \"action\"" in msg:
-        return ActionActivity(**j)
-    elif "\"atype\": \"speech\"" in msg:
-        return SpeechActivity(**j)
+def message_to_activity(msg):
+    print("message_to_activity: " + msg)
+    if msg.startswith("[") and msg.endswith("]"):
+        name = ""
+        nameaction = ""
+        object = ""
+        mo = re.search('* name="(.+?)"', msg)
+        if mo:
+            print("reg: " + mo)
+            name = mo.groups()
+        return ActionActivity("action", nameaction, object, name)
     else:
-        print("Not a known type")
-        raise Exception("Not a known type")
+        return SpeechActivity("speech", "tmp", msg)
 
 def fetch_data():
     global q
@@ -46,7 +53,7 @@ def fetch_data():
     while not finished:
         try:
             data, addr = sock.recvfrom(BYTE_LENGTH)
-            activity = message_to_json(data.decode())
+            activity = message_to_activity(data.decode())
             #print("act: " + str(activity))
             q.put(activity)
         except Exception as msg:
@@ -81,8 +88,6 @@ def execute(activity):
             print("parent: " + str(own.parent))
             print("activity: " + str(activity))
             own.playAction("wave", 1, 30, play_mode=1) # does not work yet
-
-
 
 def update():
     global q

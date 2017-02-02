@@ -87,7 +87,8 @@ def execute(activity):
             own = cont.owner
             print("parent: " + str(own.parent))
             print("activity: " + str(activity))
-            own.playAction("wave", 1, 30, play_mode=1) # does not work yet
+            own.playAction("wave", 0.0, 30.0, 0, 0, 0, 0, 0.0, 0, 1.0, 2)
+
 
 def update():
     global q

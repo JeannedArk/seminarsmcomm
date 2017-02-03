@@ -36,18 +36,18 @@ import java.util.logging.Logger;
  * @author Fabrizio Nunnari
  */
 public class UDPForwarder extends ActivityExecutor {
-    
+
     private static final String PREFIX = "------";
-    
+
     /** The prefix used to identify ActionActivity blocks in sentences. */
     private static final String BLOCK_PREFIX = "\\UDPFwd=";
-    
+
     private static final int UDP_BROADCAST_PORT = 23000;
-    
+
     // The singleton logger instance
     private final LOGConsoleLogger mLogger = LOGConsoleLogger.getInstance();
 
-    
+
     private DatagramSocket mDatagramSocket ;
     private LinkedList<InetAddress> mBroadcastAddresses = new LinkedList<InetAddress>();
 
@@ -61,18 +61,18 @@ public class UDPForwarder extends ActivityExecutor {
 
     }
 
-    
+
     /** This serves to create a unique prefix for your blocks. */
     @Override
     public String marker(long id) {
         return BLOCK_PREFIX + id ;
     }
 
-    
+
     /** This method is invoked every time a scene is played. */
     @Override
     public void execute(AbstractActivity activity) {
-        
+
         //
         // General Activity information
         //
@@ -80,11 +80,11 @@ public class UDPForwarder extends ActivityExecutor {
         AbstractActivity.Type a_type = activity.getType();
         String a_actor = activity.getActor();
         String a_mode = activity.getMode();
-        
+
 //        mLogger.message(
 //                    String.format("Got execute for action name=%s, type=%s, type=, actor=, mode=",
 //                                a_name, a_type, a_actor, a_mode));
-        
+
         LinkedList<ActionFeature> a_features = activity.getFeatures();
         if (a_features != null) {
 //            mLogger.message("Festures ("+a_features.size()+")") ;
@@ -97,7 +97,7 @@ public class UDPForwarder extends ActivityExecutor {
         } else {
             mLogger.message("No Features");
         }
-        
+
         //
         // Now we distinguish between specific Activity subclasses
         //
@@ -106,10 +106,11 @@ public class UDPForwarder extends ActivityExecutor {
 
             String sa_textonly = sa.getTextOnly(BLOCK_PREFIX).trim();
             String sa_punct = sa.getPunct();
-            
+
             // broadcast the text on the network.
-            broadcastMessage(sa_textonly);
-            
+//            broadcastMessage(sa_textonly);
+            broadcastMessage(toJson(activity));
+
             //
             // The following lines of code will extract all the Action blocks
             // from the speech and forward them to the global scheduler in
@@ -118,13 +119,14 @@ public class UDPForwarder extends ActivityExecutor {
             for (String tm : timemarks) {
                 mProject.getRunTimePlayer().getActivityScheduler().handle(tm);
             }
-            
+
         } else if (activity instanceof ActionActivity) {
             ActionActivity aa = (ActionActivity) activity;
             String aa_text = aa.getText();
-            
+
             // broadcast the text on the network.
-            broadcastMessage(aa_text);
+//            broadcastMessage(aa_text);
+            broadcastMessage(toJson(activity));
 
         } else {
             mLogger.warning("Unhandled Activity subclass: " + activity.getClass().getName()) ;
@@ -132,7 +134,7 @@ public class UDPForwarder extends ActivityExecutor {
 
     }
 
-    
+
     /** Convert the string into UTF8 bytes and broadcast the string to all
      * known broadcast addresses on this machine.
      */
@@ -140,7 +142,7 @@ public class UDPForwarder extends ActivityExecutor {
         try {
             byte[] sendData = message.getBytes("UTF8");
             for (InetAddress bc_addr : mBroadcastAddresses) {
-                
+
                 DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, bc_addr, UDP_BROADCAST_PORT);
                 try {
                     mDatagramSocket.send(sendPacket);
@@ -149,19 +151,19 @@ public class UDPForwarder extends ActivityExecutor {
                 } catch (IOException ex) {
                     Logger.getLogger(UDPForwarder.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                
+
             }
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(UDPForwarder.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     /** This method is invoked when the project starts its execution;
      * This is a good place to put sub-threads or sockets initializations.
      */
     @Override
     public void launch() {
-        
+
         mLogger.message("Opening UDP socket...") ;
 
         try {
@@ -169,37 +171,40 @@ public class UDPForwarder extends ActivityExecutor {
             // Open a UDP broadcast socket
             mDatagramSocket = new DatagramSocket();
             mDatagramSocket.setBroadcast(true);
-            
+
             //
             // Enumerate through the interfaces to find all broadcasting addresses.
             //
-            Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces(); 
+            Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
             while (interfaces.hasMoreElements()) {
 
                     NetworkInterface networkInterface = interfaces.nextElement();
 
-                    if (networkInterface.isLoopback() || !networkInterface.isUp()) {    // TODO test
+//                    if (networkInterface.isLoopback() || !networkInterface.isUp()) {    // TODO test
+                    if (!networkInterface.isUp()) {
                         continue; // Don't want to broadcast to inactive inferfaces
                     }
 
                 for (InterfaceAddress interfaceAddress : networkInterface.getInterfaceAddresses()) {
-                    
+
+                    System.out.println("---------Internet address: " + interfaceAddress);
+
                     InetAddress broadcast = interfaceAddress.getBroadcast();
                     if (broadcast == null) {
                         continue;
                     }
-                    
+
 //                    System.out.println(PREFIX + broadcast);
                     mBroadcastAddresses.add(broadcast) ;
                 }
-                
+
             }
 
         } catch (SocketException ex) {
             Logger.getLogger(UDPForwarder.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        
+
+
     }
 
     /** This method is executed when the project is stopped;
@@ -212,5 +217,44 @@ public class UDPForwarder extends ActivityExecutor {
         mDatagramSocket.close();
         mLogger.message("Socket closed.") ;
     }
-    
+
+    private String toJson(AbstractActivity activity) {
+
+        String json = "{\n";
+        if (activity instanceof ActionActivity) {
+
+            ActionActivity aa = (ActionActivity) activity;
+
+            json += "\"atype\": \"action\",";
+            json += "\"object\": " + "\"" + aa.getActor() + "\"" + ",";
+            json += "\"nameaction\": " + "\"" + aa.getName() + "\"" + ",";
+
+            LinkedList<ActionFeature> a_features = activity.getFeatures();
+
+            for (int i = 0; a_features != null && i < a_features.size(); i++) {
+
+                ActionFeature af = a_features.get(i);
+                String val = af.getVal().replace("'", ""); // Values of type string are always enclosed by "'", remove this for json
+
+                json += "\"" + af.getKey() + "\": \"" + val + "\"";
+                if (i != a_features.size() - 1) {
+                    json += ",";
+                }
+
+            }
+
+        } else if (activity instanceof SpeechActivity) {
+            SpeechActivity sa = (SpeechActivity) activity;
+
+            json += "\"atype\": \"speech\",";
+            json += "\"object\": " + "\"" + sa.getActor() + "\"" + ",";
+            json += "\"text\": " + "\"" + sa.getTextOnly("\\UDPFwd=").trim() + "\"";
+
+        } else {
+            throw new UnsupportedOperationException("Not supported activity");
+        }
+
+        return json + "\n}";
+    }
+
 }

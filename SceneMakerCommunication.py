@@ -4,7 +4,7 @@ import time
 import socket
 import _thread
 import queue
-import re
+import json
 
 from Activity import *
 
@@ -34,11 +34,15 @@ q = queue.Queue()
 
 
 def message_to_activity(msg):
-    #print("message_to_activity: >" + msg + "<")
-    if msg[0] == "[" and msg[len(msg) - 1] == "]":
-        return ActionActivity("action", "playaction", "anne", "wave")
+    print("message_to_activity: >" + msg + "<")
+    j = json.loads(msg)
+    if "\"atype\": \"action\"" in msg:
+        return ActionActivity(**j)
+    elif "\"atype\": \"speech\"" in msg:
+        return SpeechActivity(**j)
     else:
-        return SpeechActivity("speech", "tmp", msg)
+        print("Not a known type")
+        raise Exception("Not a known type")
 
 def fetch_data():
     global q

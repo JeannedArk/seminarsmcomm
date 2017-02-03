@@ -1,9 +1,10 @@
 class ActionActivity(object):
-    def __init__(self, atype, nameaction, object, name):
+    def __init__(self, atype, nameaction, object, name, speed):
         self.atype = atype
         self.nameaction = nameaction
         self.object = object
         self.name = name
+        self.speed = speed
 
     def __str__(self):
         return  "ActionActivity(object: " + self.object + ", name: " + self.name + ", nameaction: " + self.nameaction + ")"

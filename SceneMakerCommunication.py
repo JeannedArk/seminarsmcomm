@@ -34,16 +34,9 @@ q = queue.Queue()
 
 
 def message_to_activity(msg):
-    print("message_to_activity: " + msg)
-    if msg.startswith("[") and msg.endswith("]"):
-        name = ""
-        nameaction = ""
-        object = ""
-        mo = re.search('* name="(.+?)"', msg)
-        if mo:
-            print("reg: " + mo)
-            name = mo.groups()
-        return ActionActivity("action", nameaction, object, name)
+    #print("message_to_activity: >" + msg + "<")
+    if msg[0] == "[" and msg[len(msg) - 1] == "]":
+        return ActionActivity("action", "playaction", "anne", "wave")
     else:
         return SpeechActivity("speech", "tmp", msg)
 
@@ -76,23 +69,21 @@ def end():
     bge.logic.endGame()
 
 def execute(activity):
-    c = GameLogic.getCurrentController()
+    print("execute: " + str(activity))
+    #c = GameLogic.getCurrentController()
     #print(">" + activity.atype + "<")
     #if activity.atype is "action":
     if activity.atype == "action":
-        print("name: " + activity.name)
-        if "wave" in activity.name:
-            print("wave")
-            cont = bge.logic.getCurrentController()
-            own = cont.owner
-            print("parent: " + str(own.parent))
-            print("activity: " + str(activity))
-            own.playAction("wave", 0.0, 30.0, 0, 0, 0, 0, 0.0, 0, 1.0, 2)
-
+        print("execute name: " + activity.name)
+        cont = bge.logic.getCurrentController()
+        own = cont.owner
+        #print("parent: " + str(own.parent))
+        #print("activity: " + str(activity))
+        own.playAction(activity.name, 0.0, 30.0, 0, 0, 0, 0, 0.0, 0, 1.0, 2)
 
 def update():
     global q
     if not q.empty():
         data = q.get()
-        print("update: " + str(data))
+        #print("update: " + str(data))
         execute(data)

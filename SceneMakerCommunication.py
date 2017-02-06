@@ -30,12 +30,16 @@ try:
 except:
     sock.bind(("10.9.23.255", UDP_PORT)) # at Uni
 
+# finished will be set to True if the end function is called, then fetch_data
+# will not be executed anymore and the thread closes
 finished = False
+# Thread safe FIFO queue for storing and getting the activities
 q = queue.Queue()
 
 
 def message_to_activity(msg):
     """Converts a given string in JSON format to SpeechActivity or ActionActivity"""
+
     print("message_to_activity: >" + msg + "<")
     j = json.loads(msg)
     if "\"atype\": \"action\"" in msg:
@@ -60,12 +64,16 @@ def fetch_data():
             print(msg)
 
 def init():
+    """Spawn a new thread for the fetching data"""
+
     print("SceneMakerCommunication init")
     bge.render.showMouse(True)
     _thread.start_new_thread(fetch_data, ())
 
 def end():
+    """Finish and close everything including the socket communication"""
     global finished
+
     print("SceneMakerCommunication end")
 
     # Kill thread
@@ -86,6 +94,11 @@ def get_all_actions(obj):
 """
 
 def execute(activity):
+    """Execute the passed activity. It is either a SpeechActivity or ActionActivity
+
+    Note: Executing the SpeechActivity is not yet implemented, but should be relatively easy
+    if the connection with MaryTTS works.
+    """
     print("execute: " + str(activity))
     #c = GameLogic.getCurrentController()
     #print(">" + activity.atype + "<")
@@ -104,8 +117,11 @@ def execute(activity):
         bpy.context.scene.update()
 
 def update():
+    """Update routine called from 'always' from Blender
+
+    Pop the oldest activity from the queue, if existing and execute it"""
     global q
+
     if not q.empty():
         data = q.get()
-        #print("update: " + str(data))
         execute(data)

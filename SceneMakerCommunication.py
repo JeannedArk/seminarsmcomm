@@ -1,4 +1,5 @@
 import bge
+import bpy
 import GameLogic
 import time
 import socket
@@ -34,6 +35,7 @@ q = queue.Queue()
 
 
 def message_to_activity(msg):
+    """Converts a given string in JSON format to SpeechActivity or ActionActivity"""
     print("message_to_activity: >" + msg + "<")
     j = json.loads(msg)
     if "\"atype\": \"action\"" in msg:
@@ -45,6 +47,7 @@ def message_to_activity(msg):
         raise Exception("Not a known type")
 
 def fetch_data():
+    """Fetches the latest not yet fetched data from the socket and puts it into the queue"""
     global q
 
     while not finished:
@@ -72,6 +75,16 @@ def end():
     # End game engine
     bge.logic.endGame()
 
+"""
+def get_all_actions(obj):
+  if obj.animation_data:
+    if obj.animation_data.action:
+      yield obj.animation_data.action
+    for track in obj.animation_data.nla_tracks:
+      for strip in track.strips:
+        yield strip.action
+"""
+
 def execute(activity):
     print("execute: " + str(activity))
     #c = GameLogic.getCurrentController()
@@ -81,9 +94,14 @@ def execute(activity):
         print("execute name: " + activity.name)
         cont = bge.logic.getCurrentController()
         own = cont.owner
+
         #print("parent: " + str(own.parent))
         #print("activity: " + str(activity))
-        own.playAction(activity.name, 0.0, 30.0, 0, 0, 0, 0, 0.0, 0, 1.0, 2)
+        own.playAction(activity.name, bpy.context.scene.frame_current, bpy.context.scene.frame_current + 30.0, 0, 0, 0, 0, 0.0, 0, 1.0, 2)
+        #own.playAction(activity.name, 0.0, 30.0, 0, 0, 0, 0, 0.0, 0, 1.0, 2)
+        bpy.context.scene.frame_current += 1
+        bpy.context.scene.frame_set(bpy.context.scene.frame_current + 1)
+        bpy.context.scene.update()
 
 def update():
     global q

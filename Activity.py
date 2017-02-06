@@ -1,4 +1,8 @@
 class ActionActivity(object):
+    """Represents an ActionActivity
+
+    TODO optional attributes
+    """
     def __init__(self, atype, nameaction, object, name, speed):
         self.atype = atype
         self.nameaction = nameaction
@@ -10,6 +14,7 @@ class ActionActivity(object):
         return  "ActionActivity(object: " + self.object + ", name: " + self.name + ", nameaction: " + self.nameaction + ")"
 
 class SpeechActivity(object):
+    """Represents a SpeechActivity"""
     def __init__(self, atype, object, text):
         self.atype = atype
         self.object = object

@@ -22,6 +22,7 @@ import java.net.InetAddress;
 import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.LinkedList;
@@ -36,56 +37,44 @@ import java.util.logging.Logger;
  * @author Fabrizio Nunnari
  */
 public class UDPForwarder extends ActivityExecutor {
-    
+
     /** The prefix used to identify ActionActivity blocks in sentences. */
-    private static final String BLOCK_PREFIX = "\\UDPFwd=" ;
-    
-    private static final int UDP_BROADCAST_PORT = 23000 ;
-    
+    private static final String BLOCK_PREFIX = "\\UDPFwd=";
+
+    private static final int UDP_BROADCAST_PORT = 23000;
+
     // The singleton logger instance
     private final LOGConsoleLogger mLogger = LOGConsoleLogger.getInstance();
 
-    
+    // Default only connect to LOCALHOST
+    private final InetAddress LOCALHOST;
     private DatagramSocket mDatagramSocket ;
     private LinkedList<InetAddress> mBroadcastAddresses = new LinkedList<InetAddress>();
 
     public UDPForwarder(PluginConfig config, RunTimeProject project) {
         super(config, project);
-        ArrayList<ConfigFeature> configFeatures = mConfig.getEntryList();
-        mLogger.message("Found " + configFeatures.size() + " features:");
-        for (ConfigFeature cf: configFeatures) {
-            mLogger.message(String.format(" - key=%s, name=%s, value=%s", cf.getKey(), cf.getName(), cf.getValue()));
-        }
 
+        try {
+            LOCALHOST = InetAddress.getByName("127.0.0.1");
+        } catch (UnknownHostException ex) {
+            throw new RuntimeException(ex.toString());
+        }
     }
 
-    
+
     /** This serves to create a unique prefix for your blocks. */
     @Override
     public String marker(long id) {
         return BLOCK_PREFIX + id ;
     }
 
-    
+
     /** This method is invoked every time a scene is played. */
     @Override
     public void execute(AbstractActivity activity) {
-        
-        //
-        // General Activity information
-        //
-        String a_name = activity.getName();
-        AbstractActivity.Type a_type = activity.getType();
-        String a_actor = activity.getActor();
-        String a_mode = activity.getMode();
-        
-        mLogger.message(
-                    String.format("Got execute for action name=%s, type=%s, type=, actor=, mode=",
-                                a_name, a_type, a_actor, a_mode));
-        
+
         LinkedList<ActionFeature> a_features = activity.getFeatures();
-        if(a_features != null) {
-            mLogger.message("Festures ("+a_features.size()+")") ;
+        if (a_features != null) {
             for (ActionFeature af: a_features) {
                 String af_key = af.getKey();
                 ActionFeature.Type af_type = af.getTyp();
@@ -95,21 +84,16 @@ public class UDPForwarder extends ActivityExecutor {
         } else {
             mLogger.message("No Features");
         }
-        
+
         //
         // Now we distinguish between specific Activity subclasses
         //
         if (activity instanceof SpeechActivity) {
             SpeechActivity sa = (SpeechActivity) activity;
-                                   
-            String sa_textonly = sa.getTextOnly(BLOCK_PREFIX).trim();
-            String sa_punct = sa.getPunct();
-            
-            mLogger.message("===UDPSSS This is a SpeechActivity. Text='"+sa_textonly+"', Punct="+sa_punct);
-            //
+
             // broadcast the text on the network.
-            broadcastMessage(sa_textonly);
-            
+            broadcastMessage(toJson(activity));
+
             //
             // The following lines of code will extract all the Action blocks
             // from the speech and forward them to the global scheduler in
@@ -118,24 +102,17 @@ public class UDPForwarder extends ActivityExecutor {
             for (String tm : timemarks) {
                 mProject.getRunTimePlayer().getActivityScheduler().handle(tm);
             }
-            
+
         } else if (activity instanceof ActionActivity) {
             ActionActivity aa = (ActionActivity) activity;
-            
-            String aa_text = aa.getText();
-            mLogger.message("===UDPAAA This is an ActionActivity. Text="+aa_text);
-
-            //
-            // broadcast the text on the network.
-            broadcastMessage(aa_text);
-
+            broadcastMessage(toJson(activity));
         } else {
             mLogger.warning("Unhandled Activity subclass: " + activity.getClass().getName()) ;
         }
 
     }
 
-    
+
     /** Convert the string into UTF8 bytes and broadcast the string to all
      * known broadcast addresses on this machine.
      */
@@ -143,66 +120,77 @@ public class UDPForwarder extends ActivityExecutor {
         try {
             byte[] sendData = message.getBytes("UTF8");
             for (InetAddress bc_addr : mBroadcastAddresses) {
-                
+
                 DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, bc_addr, UDP_BROADCAST_PORT);
                 try {
                     mDatagramSocket.send(sendPacket);
+                    String msg = message + " sent to " + bc_addr.getHostAddress() + " length: " + sendData.length;
+                    mLogger.message(msg);
                 } catch (IOException ex) {
                     Logger.getLogger(UDPForwarder.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                mLogger.message(message + " sent to " + bc_addr.getHostAddress());
-                
+
             }
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(UDPForwarder.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    /** This method is invoked when the project starts its execution;
+
+    /**
+     * This method is invoked when the project starts its execution;
      * This is a good place to put sub-threads or sockets initializations.
      */
     @Override
     public void launch() {
-        
+
         mLogger.message("Opening UDP socket...") ;
 
         try {
-            //
             // Open a UDP broadcast socket
             mDatagramSocket = new DatagramSocket();
             mDatagramSocket.setBroadcast(true);
-            
-            //
-            // Enumerate through the interfaces to find all broadcasting addresses.
-            //
-            Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces(); 
-            while (interfaces.hasMoreElements()) {
-
-                NetworkInterface networkInterface = interfaces.nextElement();
-
-                if (networkInterface.isLoopback() || !networkInterface.isUp()) {    // TODO test
-                    continue; // Don't want to broadcast to inactive inferfaces
-                }
-
-                for (InterfaceAddress interfaceAddress : networkInterface.getInterfaceAddresses()) {
-                    InetAddress broadcast = interfaceAddress.getBroadcast();
-                    if (broadcast == null) {
-                        continue;
-                    }
-                    
-                    mBroadcastAddresses.add(broadcast) ;
-                }
-                
-            }
-
+            mBroadcastAddresses.add(LOCALHOST);   
         } catch (SocketException ex) {
             Logger.getLogger(UDPForwarder.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        
+
+    }
+    
+    /**
+     * Alternatively to default configured LOCALHOST, you can connect to all available
+     * interfaces.
+     * 
+     * @throws SocketException 
+     */
+    private void connectToAllAvailableInterfaces() throws SocketException {
+        //
+        // Enumerate through the interfaces to find all broadcasting addresses.
+        //
+        Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+        while (interfaces.hasMoreElements()) {
+
+            NetworkInterface networkInterface = interfaces.nextElement();
+
+//          if (networkInterface.isLoopback() || !networkInterface.isUp()) {
+            if (!networkInterface.isUp()) {
+                continue; // Don't want to broadcast to inactive inferfaces
+            }
+
+            for (InterfaceAddress interfaceAddress : networkInterface.getInterfaceAddresses()) {
+
+                InetAddress broadcast = interfaceAddress.getBroadcast();
+                if (broadcast == null) {
+                    continue;
+                }
+
+                mBroadcastAddresses.add(broadcast) ;
+            }
+
+        }
     }
 
-    /** This method is executed when the project is stopped;
+    /**
+     * This method is executed when the project is stopped;
      * Here you are supposed to stop and join all sub-threads,
      * and close sockets.
      */
@@ -212,5 +200,47 @@ public class UDPForwarder extends ActivityExecutor {
         mDatagramSocket.close();
         mLogger.message("Socket closed.") ;
     }
-    
+
+    /**
+     * Return a string representation of an activity in JSON format.
+     */ 
+    private String toJson(AbstractActivity activity) {
+
+        String json = "{\n";
+        if (activity instanceof ActionActivity) {
+
+            ActionActivity aa = (ActionActivity) activity;
+
+            json += "\"atype\": \"action\",";
+            json += "\"target\": " + "\"" + aa.getActor() + "\"" + ",";
+            json += "\"nameaction\": " + "\"" + aa.getName() + "\"" + ",";
+
+            LinkedList<ActionFeature> a_features = activity.getFeatures();
+
+            for (int i = 0; a_features != null && i < a_features.size(); i++) {
+
+                ActionFeature af = a_features.get(i);
+                String val = af.getVal().replace("'", ""); // Values of type string are always enclosed by "'", remove this for json
+
+                json += "\"" + af.getKey() + "\": \"" + val + "\"";
+                if (i != a_features.size() - 1) {
+                    json += ",";
+                }
+
+            }
+
+        } else if (activity instanceof SpeechActivity) {
+            SpeechActivity sa = (SpeechActivity) activity;
+
+            json += "\"atype\": \"speech\",";
+            json += "\"target\": " + "\"" + sa.getActor() + "\"" + ",";
+            json += "\"text\": " + "\"" + sa.getTextOnly("\\UDPFwd=").trim() + "\"";
+
+        } else {
+            throw new UnsupportedOperationException("Not supported activity");
+        }
+
+        return json + "\n}";
+    }
+
 }

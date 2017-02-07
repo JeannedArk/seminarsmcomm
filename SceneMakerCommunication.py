@@ -40,8 +40,9 @@ bge.logic.getCurrentController().owner.isPlayingAction()
 """
 
 # UDP setup
-# "127.0.0.1" does not work
-UDP_IP = "192.168.0.255"
+# Alternativley, but UDPForwarder.java config has to be adjusted
+#UDP_IP = "192.168.0.255"
+UDP_IP = "127.0.0.1"
 UDP_PORT = 23000
 # A msg is typically 40 bytes long, so this is just for safety
 BYTE_LENGTH = 256
@@ -51,7 +52,7 @@ sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 try:
     sock.bind((UDP_IP, UDP_PORT))
 except:
-    sock.bind(("10.9.23.255", UDP_PORT)) # at Uni
+    sock.bind(("10.9.23.255", UDP_PORT)) # at Uni when "192.168.0.255" is set
 
 # finished will be set to True if the end function is called, then fetch_data
 # will not be executed anymore and the thread closes
@@ -122,7 +123,7 @@ def execute(activity):
         # TODO get from activity?
         start_frame = 0
         end_frame = 30
-        own.playAction(activity.name, start_frame, end_frame, play_mode=bge.logic.KX_ACTION_MODE_PLAY, speed=0.5)
+        own.playAction(activity.name, start_frame, end_frame, play_mode=bge.logic.KX_ACTION_MODE_PLAY, speed=activity.speed)
 
 
 def update():

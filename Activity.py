@@ -9,7 +9,7 @@ class ActionActivity(object):
         self.nameaction = nameaction
         self.target = target
         self.name = name
-        self.speed = speed
+        self.speed = float(speed)
 
     def __str__(self):
         return  "ActionActivity(target: " + self.target + ", name: " + self.name + ", nameaction: " + self.nameaction + ")"

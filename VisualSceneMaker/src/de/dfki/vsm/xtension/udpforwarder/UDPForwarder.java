@@ -22,6 +22,7 @@ import java.net.InetAddress;
 import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.LinkedList;
@@ -37,8 +38,6 @@ import java.util.logging.Logger;
  */
 public class UDPForwarder extends ActivityExecutor {
 
-    private static final String PREFIX = "------";
-
     /** The prefix used to identify ActionActivity blocks in sentences. */
     private static final String BLOCK_PREFIX = "\\UDPFwd=";
 
@@ -47,18 +46,19 @@ public class UDPForwarder extends ActivityExecutor {
     // The singleton logger instance
     private final LOGConsoleLogger mLogger = LOGConsoleLogger.getInstance();
 
-
+    // Default only connect to LOCALHOST
+    private final InetAddress LOCALHOST;
     private DatagramSocket mDatagramSocket ;
     private LinkedList<InetAddress> mBroadcastAddresses = new LinkedList<InetAddress>();
 
     public UDPForwarder(PluginConfig config, RunTimeProject project) {
         super(config, project);
-        ArrayList<ConfigFeature> configFeatures = mConfig.getEntryList();
-//        mLogger.message("Found " + configFeatures.size() + " features:");
-        for (ConfigFeature cf: configFeatures) {
-//            mLogger.message(String.format(" - key=%s, name=%s, value=%s", cf.getKey(), cf.getName(), cf.getValue()));
-        }
 
+        try {
+            LOCALHOST = InetAddress.getByName("127.0.0.1");
+        } catch (UnknownHostException ex) {
+            throw new RuntimeException(ex.toString());
+        }
     }
 
 
@@ -73,21 +73,8 @@ public class UDPForwarder extends ActivityExecutor {
     @Override
     public void execute(AbstractActivity activity) {
 
-        //
-        // General Activity information
-        //
-        String a_name = activity.getName();
-        AbstractActivity.Type a_type = activity.getType();
-        String a_actor = activity.getActor();
-        String a_mode = activity.getMode();
-
-//        mLogger.message(
-//                    String.format("Got execute for action name=%s, type=%s, type=, actor=, mode=",
-//                                a_name, a_type, a_actor, a_mode));
-
         LinkedList<ActionFeature> a_features = activity.getFeatures();
         if (a_features != null) {
-//            mLogger.message("Festures ("+a_features.size()+")") ;
             for (ActionFeature af: a_features) {
                 String af_key = af.getKey();
                 ActionFeature.Type af_type = af.getTyp();
@@ -104,11 +91,7 @@ public class UDPForwarder extends ActivityExecutor {
         if (activity instanceof SpeechActivity) {
             SpeechActivity sa = (SpeechActivity) activity;
 
-            String sa_textonly = sa.getTextOnly(BLOCK_PREFIX).trim();
-            String sa_punct = sa.getPunct();
-
             // broadcast the text on the network.
-//            broadcastMessage(sa_textonly);
             broadcastMessage(toJson(activity));
 
             //
@@ -122,12 +105,7 @@ public class UDPForwarder extends ActivityExecutor {
 
         } else if (activity instanceof ActionActivity) {
             ActionActivity aa = (ActionActivity) activity;
-            String aa_text = aa.getText();
-
-            // broadcast the text on the network.
-//            broadcastMessage(aa_text);
             broadcastMessage(toJson(activity));
-
         } else {
             mLogger.warning("Unhandled Activity subclass: " + activity.getClass().getName()) ;
         }
@@ -158,7 +136,8 @@ public class UDPForwarder extends ActivityExecutor {
         }
     }
 
-    /** This method is invoked when the project starts its execution;
+    /**
+     * This method is invoked when the project starts its execution;
      * This is a good place to put sub-threads or sockets initializations.
      */
     @Override
@@ -167,47 +146,51 @@ public class UDPForwarder extends ActivityExecutor {
         mLogger.message("Opening UDP socket...") ;
 
         try {
-            //
             // Open a UDP broadcast socket
             mDatagramSocket = new DatagramSocket();
             mDatagramSocket.setBroadcast(true);
-
-            //
-            // Enumerate through the interfaces to find all broadcasting addresses.
-            //
-            Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
-            while (interfaces.hasMoreElements()) {
-
-                    NetworkInterface networkInterface = interfaces.nextElement();
-
-//                    if (networkInterface.isLoopback() || !networkInterface.isUp()) {    // TODO test
-                    if (!networkInterface.isUp()) {
-                        continue; // Don't want to broadcast to inactive inferfaces
-                    }
-
-                for (InterfaceAddress interfaceAddress : networkInterface.getInterfaceAddresses()) {
-
-                    System.out.println("---------Internet address: " + interfaceAddress);
-
-                    InetAddress broadcast = interfaceAddress.getBroadcast();
-                    if (broadcast == null) {
-                        continue;
-                    }
-
-//                    System.out.println(PREFIX + broadcast);
-                    mBroadcastAddresses.add(broadcast) ;
-                }
-
-            }
-
+            mBroadcastAddresses.add(LOCALHOST);   
         } catch (SocketException ex) {
             Logger.getLogger(UDPForwarder.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+    }
+    
+    /**
+     * Alternatively to default configured LOCALHOST, you can connect to all available
+     * interfaces.
+     * 
+     * @throws SocketException 
+     */
+    private void connectToAllAvailableInterfaces() throws SocketException {
+        //
+        // Enumerate through the interfaces to find all broadcasting addresses.
+        //
+        Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+        while (interfaces.hasMoreElements()) {
 
+            NetworkInterface networkInterface = interfaces.nextElement();
+
+//          if (networkInterface.isLoopback() || !networkInterface.isUp()) {
+            if (!networkInterface.isUp()) {
+                continue; // Don't want to broadcast to inactive inferfaces
+            }
+
+            for (InterfaceAddress interfaceAddress : networkInterface.getInterfaceAddresses()) {
+
+                InetAddress broadcast = interfaceAddress.getBroadcast();
+                if (broadcast == null) {
+                    continue;
+                }
+
+                mBroadcastAddresses.add(broadcast) ;
+            }
+
+        }
     }
 
-    /** This method is executed when the project is stopped;
+    /**
+     * This method is executed when the project is stopped;
      * Here you are supposed to stop and join all sub-threads,
      * and close sockets.
      */
@@ -218,6 +201,9 @@ public class UDPForwarder extends ActivityExecutor {
         mLogger.message("Socket closed.") ;
     }
 
+    /**
+     * Return a string representation of an activity in JSON format.
+     */ 
     private String toJson(AbstractActivity activity) {
 
         String json = "{\n";

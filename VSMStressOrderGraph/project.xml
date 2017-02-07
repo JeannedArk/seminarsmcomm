@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Project name="FabrizioTest1">
+  <Plugins>
+    <Plugin type="device" name="dummy" class="de.dfki.vsm.xtension.dummy.DummyExecutor" load="true">
+      <Feature key="dummy_prop1" val="123"/>
+      <Feature key="remote_port" val="12345"/>
+    </Plugin>
+    <Plugin type="device" name="udpforwarder" class="de.dfki.vsm.xtension.udpforwarder.UDPForwarder" load="true">
+    </Plugin>
+  </Plugins>
+  <Agents>
+    <Agent name="Anna" device="udpforwarder">
+    </Agent>
+    <Agent name="Annaa" device="dummy">
+      <Feature key="mood" val="cozy"/>
+    </Agent>
+  </Agents>
+  <Player>
+  </Player>
+</Project>

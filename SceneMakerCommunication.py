@@ -10,10 +10,33 @@ import json
 from Activity import *
 
 """
-SceneMakerCommunication
+SceneMakerCommunication retreives all data sent from the current running
+Visual SceneMaker instance (http://scenemaker.dfki.de/getstarted.html).
+The data is sent in JSON with ActionActivity and SpeechActivity objects.
 
-https://docs.python.org/2/howto/sockets.html
-https://docs.python.org/3/library/queue.html
+Therefore it creates a socket with the defined configuration. The retreived
+activities will be further propagated to Blender.
+
+Note: Executing the SpeechActivity is not yet implemented, but should be
+relatively easy if the connection with MaryTTS works.
+
+
+
+playAction documentation:
+https://docs.blender.org/api/blender_python_api_2_60_1/bge.types.html
+
+playAction(name, start_frame, end_frame, layer=0, priority=0, blendin=0, play_mode=ACT_MODE_PLAY, layer_weight=0.0, ipo_flags=0, speed=1.0)
+
+- layer (integer) – the layer the action will play in (actions in different layers are added/blended together)
+- priority (integer) – only play this action if there isn’t an action currently playing in this layer with a higher (lower number) priority
+- blendin (float) – the amount of blending between this animation and the previous one on this layer
+- play_mode (KX_ACTION_MODE_PLAY, KX_ACTION_MODE_LOOP, or KX_ACTION_MODE_PING_PONG) – the play mode
+
+
+
+Some helpful debugging parameters:
+bge.logic.getCurrentController().owner.getActionFrame()
+bge.logic.getCurrentController().owner.isPlayingAction()
 """
 
 # UDP setup
@@ -58,7 +81,6 @@ def fetch_data():
         try:
             data, addr = sock.recvfrom(BYTE_LENGTH)
             activity = message_to_activity(data.decode())
-            #print("act: " + str(activity))
             q.put(activity)
         except Exception as msg:
             print(msg)
@@ -83,15 +105,6 @@ def end():
     # End game engine
     bge.logic.endGame()
 
-"""
-def get_all_actions(obj):
-  if obj.animation_data:
-    if obj.animation_data.action:
-      yield obj.animation_data.action
-    for track in obj.animation_data.nla_tracks:
-      for strip in track.strips:
-        yield strip.action
-"""
 
 def execute(activity):
     """Execute the passed activity. It is either a SpeechActivity or ActionActivity
@@ -99,28 +112,29 @@ def execute(activity):
     Note: Executing the SpeechActivity is not yet implemented, but should be relatively easy
     if the connection with MaryTTS works.
     """
+
     print("execute: " + str(activity))
-    #c = GameLogic.getCurrentController()
-    #print(">" + activity.atype + "<")
-    #if activity.atype is "action":
     if activity.atype == "action":
         print("execute name: " + activity.name)
         cont = bge.logic.getCurrentController()
         own = cont.owner
 
-        #print("parent: " + str(own.parent))
-        #print("activity: " + str(activity))
-        own.playAction(activity.name, bpy.context.scene.frame_current, bpy.context.scene.frame_current + 30.0, 0, 0, 0, 0, 0.0, 0, 1.0, 2)
-        #own.playAction(activity.name, 0.0, 30.0, 0, 0, 0, 0, 0.0, 0, 1.0, 2)
-        bpy.context.scene.frame_current += 1
-        bpy.context.scene.frame_set(bpy.context.scene.frame_current + 1)
-        bpy.context.scene.update()
+        # TODO get from activity?
+        start_frame = 0
+        end_frame = 30
+        own.playAction(activity.name, start_frame, end_frame, play_mode=bge.logic.KX_ACTION_MODE_PLAY, speed=0.5)
+
 
 def update():
     """Update routine called from 'always' from Blender
 
     Pop the oldest activity from the queue, if existing and execute it"""
     global q
+
+    # TODO test with several animations
+    # it will be probably not playing overlapping animations
+    # then check if one animation is still playing, then
+    # pop the activity from the queue
 
     if not q.empty():
         data = q.get()

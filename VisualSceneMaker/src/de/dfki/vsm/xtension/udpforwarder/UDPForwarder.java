@@ -226,7 +226,7 @@ public class UDPForwarder extends ActivityExecutor {
             ActionActivity aa = (ActionActivity) activity;
 
             json += "\"atype\": \"action\",";
-            json += "\"object\": " + "\"" + aa.getActor() + "\"" + ",";
+            json += "\"target\": " + "\"" + aa.getActor() + "\"" + ",";
             json += "\"nameaction\": " + "\"" + aa.getName() + "\"" + ",";
 
             LinkedList<ActionFeature> a_features = activity.getFeatures();
@@ -247,7 +247,7 @@ public class UDPForwarder extends ActivityExecutor {
             SpeechActivity sa = (SpeechActivity) activity;
 
             json += "\"atype\": \"speech\",";
-            json += "\"object\": " + "\"" + sa.getActor() + "\"" + ",";
+            json += "\"target\": " + "\"" + sa.getActor() + "\"" + ",";
             json += "\"text\": " + "\"" + sa.getTextOnly("\\UDPFwd=").trim() + "\"";
 
         } else {

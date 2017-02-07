@@ -63,7 +63,7 @@ q = queue.Queue()
 def message_to_activity(msg):
     """Converts a given string in JSON format to SpeechActivity or ActionActivity"""
 
-    print("message_to_activity: >" + msg + "<")
+    #print("message_to_activity: >" + msg + "<")
     j = json.loads(msg)
     if "\"atype\": \"action\"" in msg:
         return ActionActivity(**j)
@@ -131,11 +131,7 @@ def update():
     Pop the oldest activity from the queue, if existing and execute it"""
     global q
 
-    # TODO test with several animations
-    # it will be probably not playing overlapping animations
-    # then check if one animation is still playing, then
-    # pop the activity from the queue
-
-    if not q.empty():
+    # Only execute animation if another animation is not playing
+    if not q.empty() and not bge.logic.getCurrentController().owner.isPlayingAction():
         data = q.get()
         execute(data)

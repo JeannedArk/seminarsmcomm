@@ -8,7 +8,7 @@
       <SceneUttr lower="28" upper="73" punct=".">
         <ActionObject lower="28" upper="62" actor="" mode="" name="playAction" >
           <ActionFeature lower="40" upper="51" typ="STRING" key="name" val="'wave'"/>
-          <ActionFeature lower="52" upper="61" typ="FLOATING" key="speed" val="2.0"/></ActionObject>
+          <ActionFeature lower="52" upper="61" typ="FLOATING" key="speed" val="0.5"/></ActionObject>
         <SceneWord lower="63" upper="64" text="I"/>
         <SceneWord lower="65" upper="67" text="am"/>
         <SceneWord lower="68" upper="72" text="Anna"/>
@@ -23,7 +23,7 @@
       <SceneUttr lower="104" upper="156" punct=".">
         <ActionObject lower="104" upper="146" actor="" mode="" name="playAction" >
           <ActionFeature lower="116" upper="135" typ="STRING" key="name" val="'scratch_dust'"/>
-          <ActionFeature lower="136" upper="145" typ="FLOATING" key="speed" val="0.6"/></ActionObject>
+          <ActionFeature lower="136" upper="145" typ="FLOATING" key="speed" val="0.5"/></ActionObject>
         <SceneWord lower="147" upper="150" text="the"/>
         <SceneWord lower="151" upper="155" text="dust"/>
       </SceneUttr>
@@ -46,6 +46,22 @@
         <ActionObject lower="255" upper="295" actor="" mode="" name="playAction" >
           <ActionFeature lower="267" upper="294" typ="STRING" key="name" val="'head_forward_shaking'"/></ActionObject>
         <SceneWord lower="296" upper="298" text="So"/>
+      </SceneUttr>
+    </SceneTurn>
+  </SceneObject>
+  <SceneObject lower="301" upper="355" language="en" identifier="LightOn">
+    <SceneTurn lower="319" upper="355" speaker="LightTEST">
+      <SceneUttr lower="330" upper="355" punct=".">
+        <ActionObject lower="330" upper="353" actor="" mode="" name="playAction" >
+          <ActionFeature lower="342" upper="352" typ="STRING" key="name" val="'off'"/></ActionObject>
+      </SceneUttr>
+    </SceneTurn>
+  </SceneObject>
+  <SceneObject lower="357" upper="411" language="en" identifier="LightOff">
+    <SceneTurn lower="376" upper="411" speaker="LightTEST">
+      <SceneUttr lower="387" upper="411" punct=".">
+        <ActionObject lower="387" upper="409" actor="" mode="" name="playAction" >
+          <ActionFeature lower="399" upper="408" typ="STRING" key="name" val="'on'"/></ActionObject>
       </SceneUttr>
     </SceneTurn>
   </SceneObject>

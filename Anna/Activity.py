@@ -28,13 +28,21 @@ class ActionActivity(Activity):
 
     def execute(self, bge):
         print("execute: " + str(self))
-        cont = bge.logic.getCurrentController()
-        own = cont.owner
 
-        # TODO get from activity?
-        start_frame = 0
-        end_frame = 30
-        own.playAction(self.name, start_frame, end_frame, play_mode=bge.logic.KX_ACTION_MODE_PLAY, speed=self.speed)
+        if self.atype == "lightAction":
+            self.executeLightAction()
+        else:
+            cont = bge.logic.getCurrentController()
+            own = cont.owner
+
+            # TODO get from activity?
+            start_frame = 0
+            end_frame = 30
+            own.playAction(self.name, start_frame, end_frame, play_mode=bge.logic.KX_ACTION_MODE_PLAY, speed=self.speed)
+
+    def executeLightAction(self):
+        # TODO implement here light action
+        pass
 
     def __str__(self):
         return  "ActionActivity(target: " + self.target + ", name: " + self.name + ", nameaction: " + self.nameaction + ")"

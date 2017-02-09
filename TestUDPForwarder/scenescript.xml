@@ -49,19 +49,21 @@
       </SceneUttr>
     </SceneTurn>
   </SceneObject>
-  <SceneObject lower="301" upper="355" language="en" identifier="LightOn">
-    <SceneTurn lower="319" upper="355" speaker="LightTEST">
-      <SceneUttr lower="330" upper="355" punct=".">
-        <ActionObject lower="330" upper="353" actor="" mode="" name="playAction" >
-          <ActionFeature lower="342" upper="352" typ="STRING" key="name" val="'off'"/></ActionObject>
+  <SceneObject lower="301" upper="368" language="en" identifier="LightOn">
+    <SceneTurn lower="319" upper="368" speaker="LightTEST">
+      <SceneUttr lower="330" upper="368" punct=".">
+        <ActionObject lower="330" upper="367" actor="" mode="" name="lightAction" >
+          <ActionFeature lower="343" upper="353" typ="STRING" key="name" val="'off'"/>
+          <ActionFeature lower="354" upper="366" typ="FLOATING" key="strength" val="1.0"/></ActionObject>
       </SceneUttr>
     </SceneTurn>
   </SceneObject>
-  <SceneObject lower="357" upper="411" language="en" identifier="LightOff">
-    <SceneTurn lower="376" upper="411" speaker="LightTEST">
-      <SceneUttr lower="387" upper="411" punct=".">
-        <ActionObject lower="387" upper="409" actor="" mode="" name="playAction" >
-          <ActionFeature lower="399" upper="408" typ="STRING" key="name" val="'on'"/></ActionObject>
+  <SceneObject lower="370" upper="437" language="en" identifier="LightOff">
+    <SceneTurn lower="389" upper="437" speaker="LightTEST">
+      <SceneUttr lower="400" upper="437" punct=".">
+        <ActionObject lower="400" upper="436" actor="" mode="" name="lightAction" >
+          <ActionFeature lower="413" upper="422" typ="STRING" key="name" val="'on'"/>
+          <ActionFeature lower="423" upper="435" typ="FLOATING" key="strength" val="0.0"/></ActionObject>
       </SceneUttr>
     </SceneTurn>
   </SceneObject>

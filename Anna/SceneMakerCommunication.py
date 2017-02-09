@@ -74,6 +74,7 @@ def message_to_activity(msg):
         print("Not a known type")
         raise Exception("Not a known type")
 
+
 def fetch_data():
     """Fetches the latest not yet fetched data from the socket and puts it into the queue"""
     global q
@@ -86,12 +87,14 @@ def fetch_data():
         except Exception as msg:
             print(msg)
 
+
 def init():
     """Spawn a new thread for the fetching data"""
 
     print("SceneMakerCommunication init")
     bge.render.showMouse(True)
     _thread.start_new_thread(fetch_data, ())
+
 
 def end():
     """Finish and close everything including the socket communication"""
@@ -107,25 +110,6 @@ def end():
     bge.logic.endGame()
 
 
-def execute(activity):
-    """Execute the passed activity. It is either a SpeechActivity or ActionActivity
-
-    Note: Executing the SpeechActivity is not yet implemented, but should be relatively easy
-    if the connection with MaryTTS works.
-    """
-
-    print("execute: " + str(activity))
-    if activity.atype == "action":
-        print("execute name: " + activity.name)
-        cont = bge.logic.getCurrentController()
-        own = cont.owner
-
-        # TODO get from activity?
-        start_frame = 0
-        end_frame = 30
-        own.playAction(activity.name, start_frame, end_frame, play_mode=bge.logic.KX_ACTION_MODE_PLAY, speed=activity.speed)
-
-
 def update():
     """Update routine called from 'always' from Blender
 
@@ -135,4 +119,4 @@ def update():
     # Only execute animation if another animation is not playing
     if not q.empty() and not bge.logic.getCurrentController().owner.isPlayingAction():
         data = q.get()
-        execute(data)
+        data.execute(bge)

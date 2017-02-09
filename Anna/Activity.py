@@ -41,7 +41,11 @@ class ActionActivity(Activity):
             own.playAction(self.name, start_frame, end_frame, play_mode=bge.logic.KX_ACTION_MODE_PLAY, speed=self.speed)
 
     def executeLightAction(self):
-        # TODO implement here light action
+        # https://docs.blender.org/api/blender_python_api_2_60_1/bge.types.html
+        cont = bge.logic.getCurrentController()
+        light = cont.owner
+        light.energy = 1.0
+        
         pass
 
     def __str__(self):

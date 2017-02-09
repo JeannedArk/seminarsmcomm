@@ -49,21 +49,21 @@
       </SceneUttr>
     </SceneTurn>
   </SceneObject>
-  <SceneObject lower="301" upper="368" language="en" identifier="LightOn">
-    <SceneTurn lower="319" upper="368" speaker="LightTEST">
-      <SceneUttr lower="330" upper="368" punct=".">
-        <ActionObject lower="330" upper="367" actor="" mode="" name="lightAction" >
-          <ActionFeature lower="343" upper="353" typ="STRING" key="name" val="'off'"/>
-          <ActionFeature lower="354" upper="366" typ="FLOATING" key="strength" val="1.0"/></ActionObject>
+  <SceneObject lower="301" upper="360" language="en" identifier="LightOn">
+    <SceneTurn lower="319" upper="360" speaker="Sun">
+      <SceneUttr lower="324" upper="360" punct=".">
+        <ActionObject lower="324" upper="359" actor="" mode="" name="lightAction" >
+          <ActionFeature lower="337" upper="347" typ="STRING" key="name" val="'off'"/>
+          <ActionFeature lower="348" upper="358" typ="FLOATING" key="energy" val="0.0"/></ActionObject>
       </SceneUttr>
     </SceneTurn>
   </SceneObject>
-  <SceneObject lower="370" upper="437" language="en" identifier="LightOff">
-    <SceneTurn lower="389" upper="437" speaker="LightTEST">
-      <SceneUttr lower="400" upper="437" punct=".">
-        <ActionObject lower="400" upper="436" actor="" mode="" name="lightAction" >
-          <ActionFeature lower="413" upper="422" typ="STRING" key="name" val="'on'"/>
-          <ActionFeature lower="423" upper="435" typ="FLOATING" key="strength" val="0.0"/></ActionObject>
+  <SceneObject lower="362" upper="421" language="en" identifier="LightOff">
+    <SceneTurn lower="381" upper="421" speaker="Sun">
+      <SceneUttr lower="386" upper="421" punct=".">
+        <ActionObject lower="386" upper="420" actor="" mode="" name="lightAction" >
+          <ActionFeature lower="399" upper="408" typ="STRING" key="name" val="'on'"/>
+          <ActionFeature lower="409" upper="419" typ="FLOATING" key="energy" val="9.0"/></ActionObject>
       </SceneUttr>
     </SceneTurn>
   </SceneObject>

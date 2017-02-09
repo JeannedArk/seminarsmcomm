@@ -19,7 +19,7 @@ class ActionActivity(Activity):
     TODO optional attributes
     TODO start_frame, end_frame
     """
-    def __init__(self, atype, nameaction, target, name, speed=1.0):
+    def __init__(self, atype, nameaction, target, name, speed=1.0, energy=0.0):
         super(self.__class__, self).__init__(atype)
         self.nameaction = nameaction
         self.target = target

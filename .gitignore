@@ -1,0 +1,6 @@
+*.blend1
+VisualSceneMaker/src/de/dfki/vsm/model/sceneflow/*
+VisualSceneMaker/src/de/dfki/vsm/model/scenescript/*
+Anna/__pycache__/*
+__pycache__/
+.vscode/

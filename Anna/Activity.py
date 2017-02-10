@@ -45,8 +45,6 @@ class ActionActivity(Activity):
         cont = bge.logic.getCurrentController()
         light = cont.owner
         light.energy = 1.0
-        
-        pass
 
     def __str__(self):
         return  "ActionActivity(target: " + self.target + ", name: " + self.name + ", nameaction: " + self.nameaction + ")"

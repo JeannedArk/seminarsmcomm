@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<SceneFlow id="" name="default" comment="" hideLocalVar="false" hideGlobalVar="false" modifDate="Do, 9 Feb 2017 15:39:40" start="N1;" context="" package="" xmlns="xml.sceneflow.dfki.de" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="xml.sceneflow.dfki.de res/xsd/sceneflow.xsd">
+<SceneFlow id="" name="default" comment="" hideLocalVar="true" hideGlobalVar="false" modifDate="Fr, 10 Feb 2017 13:00:30" start="N1;" context="" package="" xmlns="xml.sceneflow.dfki.de" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="xml.sceneflow.dfki.de res/xsd/sceneflow.xsd">
   <Define>
   </Define>
   <Declare>
-    <Variable type="Int" name ="blinkcount">
-      <Int value="0"/>
-    </Variable>
   </Declare>
   <Commands>
   </Commands>
   <LocalVariableBadge>
-    <Position xPos="14" yPos="9"/>
+    <Position xPos="129" yPos="60"/>
   </LocalVariableBadge>
   <GlobalVariableBadge>
     <Position xPos="10" yPos="10"/>
@@ -23,6 +20,14 @@
       We start here
     </Text>
   </Comment>
+  <Comment>
+    <Graphics>
+      <Boundary xPos="201" yPos="516" width="491" height="50"/>
+    </Graphics>
+    <Text style="color:blue">
+      Toggle the light
+    </Text>
+  </Comment>
   <Node id="N1" name="N1" history="false">
     <Define>
     </Define>
@@ -30,14 +35,14 @@
     </Declare>
     <Commands>
     </Commands>
-    <TEdge target="N7" start="" timeout="1000">
+    <EEdge target="N7" start ="">
     <Graphics>
       <Connection>
-        <ControlPoint xPos="120" yPos="165" ctrlXPos="194" ctrlYPos="165"/>
-        <ControlPoint xPos="212" yPos="177" ctrlXPos="135" ctrlYPos="165"/>
+        <ControlPoint xPos="120" yPos="165" ctrlXPos="142" ctrlYPos="165"/>
+        <ControlPoint xPos="210" yPos="165" ctrlXPos="187" ctrlYPos="165"/>
       </Connection>
     </Graphics>
-    </TEdge>
+    </EEdge>
     <Graphics>
       <Position xPos="30" yPos="120"/>
     </Graphics>
@@ -172,60 +177,24 @@
         <String><![CDATA[Welcome]]></String>
       </PlaySceneGroup>
     </Commands>
+    <FEdge target="N10" start="">
+      <Graphics>
+        <Connection>
+          <ControlPoint xPos="294" yPos="142" ctrlXPos="352" ctrlYPos="107"/>
+          <ControlPoint xPos="255" yPos="390" ctrlXPos="255" ctrlYPos="322"/>
+        </Connection>
+      </Graphics>
+    </FEdge>
     <FEdge target="N2" start="">
       <Graphics>
         <Connection>
           <ControlPoint xPos="300" yPos="165" ctrlXPos="322" ctrlYPos="165"/>
-          <ControlPoint xPos="392" yPos="177" ctrlXPos="367" ctrlYPos="165"/>
-        </Connection>
-      </Graphics>
-    </FEdge>
-    <FEdge target="N8" start="">
-      <Graphics>
-        <Connection>
-          <ControlPoint xPos="287" yPos="197" ctrlXPos="329" ctrlYPos="239"/>
-          <ControlPoint xPos="403" yPos="313" ctrlXPos="360" ctrlYPos="270"/>
-        </Connection>
-      </Graphics>
-    </FEdge>
-    <FEdge target="N9" start="">
-      <Graphics>
-        <Connection>
-          <ControlPoint xPos="294" yPos="142" ctrlXPos="322" ctrlYPos="125"/>
-          <ControlPoint xPos="396" yPos="97" ctrlXPos="367" ctrlYPos="113"/>
+          <ControlPoint xPos="390" yPos="165" ctrlXPos="367" ctrlYPos="165"/>
         </Connection>
       </Graphics>
     </FEdge>
     <Graphics>
       <Position xPos="210" yPos="120"/>
-    </Graphics>
-  </Node>
-  <Node id="N8" name="blink" history="false">
-    <Define>
-    </Define>
-    <Declare>
-    </Declare>
-    <Commands>
-      <Assign>
-        <Variable name="blinkcount"/>
-        <Expression>
-          <Add>
-            <Variable name="blinkcount"/>
-            <Int value="1"/>
-          </Add>
-        </Expression>
-      </Assign>
-    </Commands>
-    <TEdge target="N8" start="" timeout="5000">
-    <Graphics>
-      <Connection>
-        <ControlPoint xPos="447" yPos="302" ctrlXPos="471" ctrlYPos="216"/>
-        <ControlPoint xPos="474" yPos="322" ctrlXPos="552" ctrlYPos="276"/>
-      </Connection>
-    </Graphics>
-    </TEdge>
-    <Graphics>
-      <Position xPos="390" yPos="300"/>
     </Graphics>
   </Node>
   <Node id="N9" name="LightOn" history="false">
@@ -234,20 +203,20 @@
     <Declare>
     </Declare>
     <Commands>
-      <PlaySceneGroup>
-        <String><![CDATA[LightOn]]></String>
-      </PlaySceneGroup>
+      <Play>
+        <String><![CDATA[[Sun lightAction name='off' energy=0.0]]]></String>
+      </Play>
     </Commands>
-    <TEdge target="N10" start="" timeout="10000">
+    <TEdge target="N10" start="" timeout="1000">
     <Graphics>
       <Connection>
-        <ControlPoint xPos="390" yPos="75" ctrlXPos="367" ctrlYPos="75"/>
-        <ControlPoint xPos="300" yPos="75" ctrlXPos="322" ctrlYPos="75"/>
+        <ControlPoint xPos="570" yPos="435" ctrlXPos="547" ctrlYPos="435"/>
+        <ControlPoint xPos="300" yPos="435" ctrlXPos="322" ctrlYPos="435"/>
       </Connection>
     </Graphics>
     </TEdge>
     <Graphics>
-      <Position xPos="390" yPos="30"/>
+      <Position xPos="570" yPos="390"/>
     </Graphics>
   </Node>
   <Node id="N10" name="LightOff" history="false">
@@ -256,20 +225,20 @@
     <Declare>
     </Declare>
     <Commands>
-      <PlaySceneGroup>
-        <String><![CDATA[LightOff]]></String>
-      </PlaySceneGroup>
+      <Play>
+        <String><![CDATA[[Sun lightAction name='on' energy=9.0]]]></String>
+      </Play>
     </Commands>
-    <TEdge target="N9" start="" timeout="10000">
+    <TEdge target="N9" start="" timeout="1000">
     <Graphics>
       <Connection>
-        <ControlPoint xPos="298" yPos="63" ctrlXPos="319" ctrlYPos="57"/>
-        <ControlPoint xPos="392" yPos="63" ctrlXPos="370" ctrlYPos="57"/>
+        <ControlPoint xPos="298" yPos="423" ctrlXPos="319" ctrlYPos="417"/>
+        <ControlPoint xPos="572" yPos="423" ctrlXPos="550" ctrlYPos="417"/>
       </Connection>
     </Graphics>
     </TEdge>
     <Graphics>
-      <Position xPos="210" yPos="30"/>
+      <Position xPos="210" yPos="390"/>
     </Graphics>
   </Node>
   <UserCommands>

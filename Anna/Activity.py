@@ -37,7 +37,7 @@ class ActionActivity(Activity):
 
             # TODO get from activity?
             start_frame = 0
-            end_frame = 30
+            end_frame = 60
             own.playAction(self.name, start_frame, end_frame, play_mode=bge.logic.KX_ACTION_MODE_PLAY, speed=self.speed)
 
     def executeLightAction(self):

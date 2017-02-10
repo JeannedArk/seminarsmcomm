@@ -49,22 +49,4 @@
       </SceneUttr>
     </SceneTurn>
   </SceneObject>
-  <SceneObject lower="301" upper="360" language="en" identifier="LightOn">
-    <SceneTurn lower="319" upper="360" speaker="Sun">
-      <SceneUttr lower="324" upper="360" punct=".">
-        <ActionObject lower="324" upper="359" actor="" mode="" name="lightAction" >
-          <ActionFeature lower="337" upper="347" typ="STRING" key="name" val="'off'"/>
-          <ActionFeature lower="348" upper="358" typ="FLOATING" key="energy" val="0.0"/></ActionObject>
-      </SceneUttr>
-    </SceneTurn>
-  </SceneObject>
-  <SceneObject lower="362" upper="421" language="en" identifier="LightOff">
-    <SceneTurn lower="381" upper="421" speaker="Sun">
-      <SceneUttr lower="386" upper="421" punct=".">
-        <ActionObject lower="386" upper="420" actor="" mode="" name="lightAction" >
-          <ActionFeature lower="399" upper="408" typ="STRING" key="name" val="'on'"/>
-          <ActionFeature lower="409" upper="419" typ="FLOATING" key="energy" val="9.0"/></ActionObject>
-      </SceneUttr>
-    </SceneTurn>
-  </SceneObject>
 </SceneScript>

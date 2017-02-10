@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Project name="FabrizioTest1">
+<Project name="UDPForwarder">
   <Plugins>
     <Plugin type="device" name="dummy" class="de.dfki.vsm.xtension.dummy.DummyExecutor" load="true">
       <Feature key="dummy_prop1" val="123"/>
@@ -11,7 +11,9 @@
   <Agents>
     <Agent name="Anna" device="udpforwarder">
     </Agent>
-    <Agent name="Annaa" device="dummy">
+    <Agent name="Sun" device="udpforwarder">
+    </Agent>
+    <Agent name="Anna" device="dummy">
       <Feature key="mood" val="cozy"/>
     </Agent>
   </Agents>

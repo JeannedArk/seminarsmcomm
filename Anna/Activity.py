@@ -14,16 +14,14 @@ class Activity(ABC):
         pass
 
 class ActionActivity(Activity):
-    """Represents an ActionActivity
-
-    TODO optional attributes
-    TODO start_frame, end_frame
-    """
-    def __init__(self, atype, nameaction, target, name, speed=1.0, energy=0.0):
+    """Represents an ActionActivity"""
+    def __init__(self, atype, nameaction, target, name, start_frame=0, end_frame=0, speed=1.0, energy=0.0):
         super(self.__class__, self).__init__(atype)
         self.nameaction = nameaction
         self.target = target
         self.name = name
+        self.start_frame = int(start_frame)
+        self.end_frame = int(end_frame)
         self.speed = float(speed)
 
     def execute(self, bge):
@@ -34,11 +32,7 @@ class ActionActivity(Activity):
         else:
             cont = bge.logic.getCurrentController()
             own = cont.owner
-
-            # TODO get from activity?
-            start_frame = 0
-            end_frame = 60
-            own.playAction(self.name, start_frame, end_frame, play_mode=bge.logic.KX_ACTION_MODE_PLAY, speed=self.speed)
+            own.playAction(self.name, self.start_frame, self.end_frame, play_mode=bge.logic.KX_ACTION_MODE_PLAY, speed=self.speed)
 
     def executeLightAction(self):
         # https://docs.blender.org/api/blender_python_api_2_60_1/bge.types.html

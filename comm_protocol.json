@@ -1,0 +1,25 @@
+// This shows the communication protocol which is based on the JSON format
+// Visual SceneMaker sends objects in this format and the python Blender
+// expects them to be in this format.
+// They can be variably extended and changed.
+
+// ActionActivity
+{
+  "type": "action",
+  "nameaction": "playAction", // or lightAction
+  "target": "Anna",
+  "name": "wave", // name of the animation/ action itself
+  "speed": "1.0",
+  "start_frame": "0",
+  "end_frame": "60",
+  "energy": "1.0" // For lights
+}
+
+// SpeechActivity
+{
+  "type": "speech",
+  "target": "Anna",
+  "text": "text"
+  // Can be variably extended with e.g.
+  "mood": "happy" // or angry
+}

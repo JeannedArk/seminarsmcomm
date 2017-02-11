@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SceneFlow id="" name="default" comment="" hideLocalVar="true" hideGlobalVar="false" modifDate="Sa, 11 Feb 2017 21:12:07" start="N1;" context="" package="" xmlns="xml.sceneflow.dfki.de" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="xml.sceneflow.dfki.de res/xsd/sceneflow.xsd">
+  <Define>
+  </Define>
+  <Declare>
+  </Declare>
+  <Commands>
+  </Commands>
+  <LocalVariableBadge>
+    <Position xPos="129" yPos="60"/>
+  </LocalVariableBadge>
+  <GlobalVariableBadge>
+    <Position xPos="10" yPos="10"/>
+  </GlobalVariableBadge>
+  <Comment>
+    <Graphics>
+      <Boundary xPos="15" yPos="225" width="152" height="55"/>
+    </Graphics>
+    <Text style="color:blue">
+      We start here
+    </Text>
+  </Comment>
+  <Comment>
+    <Graphics>
+      <Boundary xPos="201" yPos="516" width="491" height="50"/>
+    </Graphics>
+    <Text style="color:blue">
+      Toggle the light
+    </Text>
+  </Comment>
+  <Node id="N1" name="N1" history="false">
+    <Define>
+    </Define>
+    <Declare>
+    </Declare>
+    <Commands>
+    </Commands>
+    <FEdge target="N2" start="">
+      <Graphics>
+        <Connection>
+          <ControlPoint xPos="120" yPos="165" ctrlXPos="232" ctrlYPos="165"/>
+          <ControlPoint xPos="390" yPos="165" ctrlXPos="277" ctrlYPos="165"/>
+        </Connection>
+      </Graphics>
+    </FEdge>
+    <FEdge target="N10" start="">
+      <Graphics>
+        <Connection>
+          <ControlPoint xPos="97" yPos="204" ctrlXPos="314" ctrlYPos="212"/>
+          <ControlPoint xPos="233" yPos="396" ctrlXPos="195" ctrlYPos="335"/>
+        </Connection>
+      </Graphics>
+    </FEdge>
+    <Graphics>
+      <Position xPos="30" yPos="120"/>
+    </Graphics>
+  </Node>
+  <Node id="N2" name="N2" history="false">
+    <Define>
+    </Define>
+    <Declare>
+    </Declare>
+    <Commands>
+    </Commands>
+    <PEdge target="N3" start="" probability="34">
+      <Graphics>
+        <Connection>
+          <ControlPoint xPos="474" yPos="142" ctrlXPos="502" ctrlYPos="125"/>
+          <ControlPoint xPos="576" yPos="97" ctrlXPos="547" ctrlYPos="113"/>
+        </Connection>
+      </Graphics>
+    </PEdge>
+    <PEdge target="N4" start="" probability="33">
+      <Graphics>
+        <Connection>
+          <ControlPoint xPos="480" yPos="165" ctrlXPos="502" ctrlYPos="165"/>
+          <ControlPoint xPos="572" yPos="177" ctrlXPos="547" ctrlYPos="165"/>
+        </Connection>
+      </Graphics>
+    </PEdge>
+    <PEdge target="N5" start="" probability="33">
+      <Graphics>
+        <Connection>
+          <ControlPoint xPos="474" yPos="188" ctrlXPos="502" ctrlYPos="204"/>
+          <ControlPoint xPos="576" yPos="232" ctrlXPos="547" ctrlYPos="215"/>
+        </Connection>
+      </Graphics>
+    </PEdge>
+    <Graphics>
+      <Position xPos="390" yPos="120"/>
+    </Graphics>
+  </Node>
+  <Node id="N3" name="tilt head" history="false">
+    <Define>
+    </Define>
+    <Declare>
+    </Declare>
+    <Commands>
+      <PlaySceneGroup>
+        <String><![CDATA[tilt_head]]></String>
+      </PlaySceneGroup>
+    </Commands>
+    <EEdge target="N6" start ="">
+    <Graphics>
+      <Connection>
+        <ControlPoint xPos="658" yPos="87" ctrlXPos="729" ctrlYPos="106"/>
+        <ControlPoint xPos="842" yPos="153" ctrlXPos="770" ctrlYPos="133"/>
+      </Connection>
+    </Graphics>
+    </EEdge>
+    <Graphics>
+      <Position xPos="570" yPos="30"/>
+    </Graphics>
+  </Node>
+  <Node id="N4" name="look away" history="false">
+    <Define>
+    </Define>
+    <Declare>
+    </Declare>
+    <Commands>
+      <PlaySceneGroup>
+        <String><![CDATA[wave]]></String>
+      </PlaySceneGroup>
+    </Commands>
+    <EEdge target="N6" start ="">
+    <Graphics>
+      <Connection>
+        <ControlPoint xPos="660" yPos="165" ctrlXPos="727" ctrlYPos="165"/>
+        <ControlPoint xPos="840" yPos="165" ctrlXPos="772" ctrlYPos="165"/>
+      </Connection>
+    </Graphics>
+    </EEdge>
+    <Graphics>
+      <Position xPos="570" yPos="120"/>
+    </Graphics>
+  </Node>
+  <Node id="N5" name="scratch dust" history="false">
+    <Define>
+    </Define>
+    <Declare>
+    </Declare>
+    <Commands>
+      <PlaySceneGroup>
+        <String><![CDATA[scratch]]></String>
+      </PlaySceneGroup>
+    </Commands>
+    <EEdge target="N6" start ="">
+    <Graphics>
+      <Connection>
+        <ControlPoint xPos="658" yPos="243" ctrlXPos="729" ctrlYPos="223"/>
+        <ControlPoint xPos="842" yPos="177" ctrlXPos="770" ctrlYPos="196"/>
+      </Connection>
+    </Graphics>
+    </EEdge>
+    <Graphics>
+      <Position xPos="570" yPos="210"/>
+    </Graphics>
+  </Node>
+  <Node id="N6" name="N6" history="false">
+    <Define>
+    </Define>
+    <Declare>
+    </Declare>
+    <Commands>
+    </Commands>
+    <TEdge target="N2" start="" timeout="6000">
+    <Graphics>
+      <Connection>
+        <ControlPoint xPos="846" yPos="187" ctrlXPos="812" ctrlYPos="350"/>
+        <ControlPoint xPos="478" yPos="177" ctrlXPos="575" ctrlYPos="400"/>
+      </Connection>
+    </Graphics>
+    </TEdge>
+    <Graphics>
+      <Position xPos="840" yPos="120"/>
+    </Graphics>
+  </Node>
+  <Node id="N9" name="LightOff" history="false">
+    <Define>
+    </Define>
+    <Declare>
+    </Declare>
+    <Commands>
+      <Play>
+        <String><![CDATA[[KeyLight lightAction name='off' energy=0.0]]]></String>
+      </Play>
+    </Commands>
+    <TEdge target="N10" start="" timeout="2000">
+    <Graphics>
+      <Connection>
+        <ControlPoint xPos="570" yPos="435" ctrlXPos="547" ctrlYPos="435"/>
+        <ControlPoint xPos="300" yPos="435" ctrlXPos="322" ctrlYPos="435"/>
+      </Connection>
+    </Graphics>
+    </TEdge>
+    <Graphics>
+      <Position xPos="570" yPos="390"/>
+    </Graphics>
+  </Node>
+  <Node id="N10" name="LightOn" history="false">
+    <Define>
+    </Define>
+    <Declare>
+    </Declare>
+    <Commands>
+      <Play>
+        <String><![CDATA[[KeyLight lightAction name='on' energy=9.0]]]></String>
+      </Play>
+    </Commands>
+    <TEdge target="N9" start="" timeout="2000">
+    <Graphics>
+      <Connection>
+        <ControlPoint xPos="298" yPos="423" ctrlXPos="319" ctrlYPos="417"/>
+        <ControlPoint xPos="572" yPos="423" ctrlXPos="550" ctrlYPos="417"/>
+      </Connection>
+    </Graphics>
+    </TEdge>
+    <Graphics>
+      <Position xPos="210" yPos="390"/>
+    </Graphics>
+  </Node>
+  <UserCommands>
+    <UserCommand name="printString" classname ="java.lang.System.out" method="println">
+      <Argument name="text" type="java.lang.String"/>
+    </UserCommand>
+  </UserCommands>
+  <ClassPath>
+  </ClassPath>
+  <InitContext></InitContext>
+</SceneFlow>

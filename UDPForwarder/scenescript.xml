@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SceneScript lower="0" upper="0">
+  <SceneObject lower="0" upper="100" language="en" identifier="Welcome">
+    <SceneTurn lower="18" upper="100" speaker="Anna">
+      <SceneUttr lower="24" upper="27" punct=",">
+        <SceneWord lower="24" upper="26" text="Hi"/>
+      </SceneUttr>
+      <SceneUttr lower="28" upper="100" punct=".">
+        <ActionObject lower="28" upper="89" actor="" mode="" name="playAction" >
+          <ActionFeature lower="40" upper="51" typ="STRING" key="name" val="'wave'"/>
+          <ActionFeature lower="52" upper="65" typ="INTEGER" key="start_frame" val="0"/>
+          <ActionFeature lower="66" upper="78" typ="INTEGER" key="end_frame" val="60"/>
+          <ActionFeature lower="79" upper="88" typ="FLOATING" key="speed" val="0.5"/></ActionObject>
+        <SceneWord lower="90" upper="91" text="I"/>
+        <SceneWord lower="92" upper="94" text="am"/>
+        <SceneWord lower="95" upper="99" text="Anna"/>
+      </SceneUttr>
+    </SceneTurn>
+  </SceneObject>
+  <SceneObject lower="102" upper="210" language="en" identifier="scratch">
+    <SceneTurn lower="120" upper="210" speaker="Anna">
+      <SceneUttr lower="126" upper="130" punct=",">
+        <SceneWord lower="126" upper="129" text="Uff"/>
+      </SceneUttr>
+      <SceneUttr lower="131" upper="210" punct=".">
+        <ActionObject lower="131" upper="200" actor="" mode="" name="playAction" >
+          <ActionFeature lower="143" upper="162" typ="STRING" key="name" val="'scratch_dust'"/>
+          <ActionFeature lower="163" upper="176" typ="INTEGER" key="start_frame" val="0"/>
+          <ActionFeature lower="177" upper="189" typ="INTEGER" key="end_frame" val="60"/>
+          <ActionFeature lower="190" upper="199" typ="FLOATING" key="speed" val="0.5"/></ActionObject>
+        <SceneWord lower="201" upper="204" text="the"/>
+        <SceneWord lower="205" upper="209" text="dust"/>
+      </SceneUttr>
+    </SceneTurn>
+  </SceneObject>
+  <SceneObject lower="212" upper="303" language="en" identifier="wave">
+    <SceneTurn lower="227" upper="303" speaker="Anna">
+      <SceneUttr lower="233" upper="303" punct=".">
+        <SceneWord lower="233" upper="236" text="bye"/>
+        <ActionObject lower="237" upper="298" actor="" mode="" name="playAction" >
+          <ActionFeature lower="249" upper="260" typ="STRING" key="name" val="'wave'"/>
+          <ActionFeature lower="261" upper="274" typ="INTEGER" key="start_frame" val="0"/>
+          <ActionFeature lower="275" upper="287" typ="INTEGER" key="end_frame" val="60"/>
+          <ActionFeature lower="288" upper="297" typ="FLOATING" key="speed" val="0.5"/></ActionObject>
+        <SceneWord lower="299" upper="302" text="bye"/>
+      </SceneUttr>
+    </SceneTurn>
+  </SceneObject>
+  <SceneObject lower="305" upper="402" language="en" identifier="tilt_head">
+    <SceneTurn lower="325" upper="402" speaker="Anna">
+      <SceneUttr lower="331" upper="402" punct="?">
+        <ActionObject lower="331" upper="398" actor="" mode="" name="playAction" >
+          <ActionFeature lower="343" upper="370" typ="STRING" key="name" val="'head_forward_shaking'"/>
+          <ActionFeature lower="371" upper="384" typ="INTEGER" key="start_frame" val="0"/>
+          <ActionFeature lower="385" upper="397" typ="INTEGER" key="end_frame" val="60"/></ActionObject>
+        <SceneWord lower="399" upper="401" text="So"/>
+      </SceneUttr>
+    </SceneTurn>
+  </SceneObject>
+</SceneScript>

@@ -23,22 +23,25 @@ class ActionActivity(Activity):
         self.start_frame = int(start_frame)
         self.end_frame = int(end_frame)
         self.speed = float(speed)
+        self.energy = float(energy)
 
     def execute(self, bge):
+        """Execute this activity"""
         print("execute: " + str(self))
 
-        if self.atype == "lightAction":
-            self.executeLightAction()
+        if self.nameaction == "lightAction":
+            self.executeLightAction(bge)
         else:
             cont = bge.logic.getCurrentController()
             own = cont.owner
             own.playAction(self.name, self.start_frame, self.end_frame, play_mode=bge.logic.KX_ACTION_MODE_PLAY, speed=self.speed)
 
-    def executeLightAction(self):
-        # https://docs.blender.org/api/blender_python_api_2_60_1/bge.types.html
-        cont = bge.logic.getCurrentController()
-        light = cont.owner
-        light.energy = 1.0
+    def executeLightAction(self, bge):
+        """Execute a light action"""
+        print("h: "+ str(bge.logic.getCurrentScene()))
+        scene = bge.logic.getCurrentScene()
+        light = scene.lights[self.target]
+        light.energy = self.energy
 
     def __str__(self):
         return  "ActionActivity(target: " + self.target + ", name: " + self.name + ", nameaction: " + self.nameaction + ")"

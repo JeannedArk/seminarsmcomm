@@ -4,9 +4,9 @@ import GameLogic
 import time
 import socket
 import _thread
-import queue
 import json
 
+from PeekQueue import *
 from Activity import *
 
 """
@@ -57,8 +57,8 @@ except:
 # finished will be set to True if the end function is called, then fetch_data
 # will not be executed anymore and the thread closes
 finished = False
-# Thread safe FIFO queue for storing and getting the activities
-q = queue.Queue()
+# Thread safe FIFO queue for storing and getting the activities, extended with a peek operation
+q = PeekQueue()
 
 
 def message_to_activity(msg):
@@ -71,7 +71,6 @@ def message_to_activity(msg):
     elif "\"atype\": \"speech\"" in msg:
         return SpeechActivity(**j)
     else:
-        print("Not a known type")
         raise Exception("Not a known type")
 
 
@@ -116,7 +115,11 @@ def update():
     Pop the oldest activity from the queue, if existing and execute it"""
     global q
 
-    # Only execute animation if another animation is not playing
-    if not q.empty() and not bge.logic.getCurrentController().owner.isPlayingAction():
-        data = q.get()
-        data.execute(bge)
+    # Only execute animation if the target is not the same and
+    # the same object is not currently playing another action
+    if not q.empty():
+        element = q.peek()
+        sameTarget = element.target == str(bge.logic.getCurrentController().owner)
+        if not sameTarget or not bge.logic.getCurrentController().owner.isPlayingAction():
+            data = q.get()
+            data.execute(bge)

@@ -8,7 +8,7 @@
   "type": "action",
   "nameaction": "playAction", // or lightAction
   "target": "Anna",
-  "name": "wave",
+  "name": "wave", // name of the animation/ action itself
   "speed": "1.0",
   "start_frame": "0",
   "end_frame": "60",

@@ -1,19 +1,25 @@
-// https://docs.blender.org/api/blender_python_api_2_76_2/bge.types.KX_GameObject.html
+// This shows the communication protocol which is based on the JSON format
+// Visual SceneMaker sends objects in this format and the python Blender
+// expects them to be in this format.
+// They can be variably extended and changed.
+
+// ActionActivity
 {
   "type": "action",
-  "nameaction": "playAction", // light
-  "object": "Anna",
+  "nameaction": "playAction", // or lightAction
+  "target": "Anna",
   "name": "wave",
-  "speed": "fast",
-  "duration": 0.01
+  "speed": "1.0",
+  "start_frame": "0",
+  "end_frame": "60",
+  "energy": "1.0" // For lights
 }
 
+// SpeechActivity
 {
   "type": "speech",
-  "object": "Anna",
-  "text": "text",
-  "mood": "happy" // (angry),
-  // the msgs are splitted so for a speech object in the beginning it is not known
-  // if it belongs to a question
-  "mode": "question"
+  "target": "Anna",
+  "text": "text"
+  // Can be variably extended with e.g.
+  "mood": "happy" // or angry
 }

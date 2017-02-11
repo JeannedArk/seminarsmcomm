@@ -84,12 +84,13 @@ The integration is about mainly about avatar animation. It is possible, to creat
 %----------------------------------------------------------------------------------------
 
 \section{Manual}
-In order to make the integration of the VisualSceneMaker in Blender work, please follow the steps below.
+In order to make the integration of Visual SceneMaker in Blender work, please follow the steps below.
 \begin{enumerate}[noitemsep] % [noitemsep] removes whitespace between the items for a compact look
 \item Change to your terminal
 \item Execute the following commands inside the terminal:
 \begin{lstlisting}
 $ git clone git@github.com:JeannedArk/seminarsmcomm.git -b presentation
+$ cd ./seminarsmcomm
 $ sh start.sh
 \end{lstlisting}
 \item Close the Blender window with the default setup. Select the Blender window with Anna as character. Press „P“, the game mode starts.
@@ -107,9 +108,9 @@ One constraint is, that the name of avatar, which should perform the action, is 
 \subsection{Design Choices}
 Together with our implementation we had to make several design choices.\\
 We decided to JSON because it is a well known and light weight format. Another very important fact is, that there is no need for manual parsing of the retrieved strings messages on python side.\\
-We used a command pattern to execute the activities, because of the high grade of flexibility and dynamic and therefore it builds the base for an easy maintenance and extension in the future. Other reasons to choose this command design pattern iare architectual reasons and a better overview because of the separation of concerns.
+We used a command pattern to execute the activities, because of the high grade of flexibility and dynamic and therefore it builds the base for an easy maintenance and extension in the future. Programmatically spoken the command pattern bewares the concept of separation of concerns.
 
-\subsection{VisualSceneMaker}
+\subsection{Visual SceneMaker}
 To make the communication work, there is a class implemented in Visual SceneMaker called UDPForwarder. It parses the information from the scenes in SceneMaker in action activities and speech activities and sends them, formalized as strings in JSON representation, to all known broadcast addresses on this machine. 
 
 \subsection{Blender}
@@ -122,8 +123,8 @@ activities will be further propagated to Blender. The retrieving of the data is 
 %----------------------------------------------------------------------------------------
 
 \section{Results and Future Work}
-The result of our work is a flexible and powerful solution for the  communication from Visual SceneMaker to Blender. So far, only action activities of the actors were implemented as actions in Blender. Speech activities are currently send and recognized as speech, but not interpreted as actions by the avatars in Blender. In order to do that, an integration of a Text to Speech software, like for example MaryTTS in blender would be necessary. \\
-For evaluation, we performed a stress test with a scene in which events will be sent every 5 ms. The result showed that it performed on a local machine very fast, so that there was no recognisable delay in receiving the events. The communication protocol can be variably extended. Communication can be set to arbitrary network addresses.
+The result of our work is a flexible and powerful solution for the communication from Visual SceneMaker to Blender. So far, only action activities of the actors were implemented as actions in Blender. Speech activities are currently sent and recognized as speech, but not interpreted as actions by the avatars in Blender. In order to do that, an integration of a Text-to-Speech software, like for example MaryTTS in blender would be necessary. \\
+For evaluation, we performed a stress test with a scene in which events will be sent every 5 ms. The result showed that it performed on a local machine very fast, so that there was no recognizable delay in receiving the events. The communication protocol can be variably extended. Communication can be set to arbitrary network addresses.
 
 
 \end{document}

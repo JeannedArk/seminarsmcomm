@@ -11,10 +11,10 @@
   <Agents>
     <Agent name="Anna" device="udpforwarder">
     </Agent>
-    <Agent name="Sun" device="udpforwarder">
-    </Agent>
     <Agent name="Anna" device="dummy">
       <Feature key="mood" val="cozy"/>
+    </Agent>
+    <Agent name="KeyLight" device="udpforwarder">
     </Agent>
   </Agents>
   <Player>

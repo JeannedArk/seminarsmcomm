@@ -33,27 +33,27 @@
       </SceneUttr>
     </SceneTurn>
   </SceneObject>
-  <SceneObject lower="212" upper="308" language="en" identifier="look_away">
-    <SceneTurn lower="232" upper="308" speaker="Anna">
-      <SceneUttr lower="238" upper="308" punct=".">
-        <SceneWord lower="238" upper="241" text="bye"/>
-        <ActionObject lower="242" upper="303" actor="" mode="" name="playAction" >
-          <ActionFeature lower="254" upper="265" typ="STRING" key="name" val="'wave'"/>
-          <ActionFeature lower="266" upper="279" typ="INTEGER" key="start_frame" val="0"/>
-          <ActionFeature lower="280" upper="292" typ="INTEGER" key="end_frame" val="60"/>
-          <ActionFeature lower="293" upper="302" typ="FLOATING" key="speed" val="0.5"/></ActionObject>
-        <SceneWord lower="304" upper="307" text="bye"/>
+  <SceneObject lower="212" upper="303" language="en" identifier="wave">
+    <SceneTurn lower="227" upper="303" speaker="Anna">
+      <SceneUttr lower="233" upper="303" punct=".">
+        <SceneWord lower="233" upper="236" text="bye"/>
+        <ActionObject lower="237" upper="298" actor="" mode="" name="playAction" >
+          <ActionFeature lower="249" upper="260" typ="STRING" key="name" val="'wave'"/>
+          <ActionFeature lower="261" upper="274" typ="INTEGER" key="start_frame" val="0"/>
+          <ActionFeature lower="275" upper="287" typ="INTEGER" key="end_frame" val="60"/>
+          <ActionFeature lower="288" upper="297" typ="FLOATING" key="speed" val="0.5"/></ActionObject>
+        <SceneWord lower="299" upper="302" text="bye"/>
       </SceneUttr>
     </SceneTurn>
   </SceneObject>
-  <SceneObject lower="310" upper="407" language="en" identifier="tilt_head">
-    <SceneTurn lower="330" upper="407" speaker="Anna">
-      <SceneUttr lower="336" upper="407" punct="?">
-        <ActionObject lower="336" upper="403" actor="" mode="" name="playAction" >
-          <ActionFeature lower="348" upper="375" typ="STRING" key="name" val="'head_forward_shaking'"/>
-          <ActionFeature lower="376" upper="389" typ="INTEGER" key="start_frame" val="0"/>
-          <ActionFeature lower="390" upper="402" typ="INTEGER" key="end_frame" val="60"/></ActionObject>
-        <SceneWord lower="404" upper="406" text="So"/>
+  <SceneObject lower="305" upper="402" language="en" identifier="tilt_head">
+    <SceneTurn lower="325" upper="402" speaker="Anna">
+      <SceneUttr lower="331" upper="402" punct="?">
+        <ActionObject lower="331" upper="398" actor="" mode="" name="playAction" >
+          <ActionFeature lower="343" upper="370" typ="STRING" key="name" val="'head_forward_shaking'"/>
+          <ActionFeature lower="371" upper="384" typ="INTEGER" key="start_frame" val="0"/>
+          <ActionFeature lower="385" upper="397" typ="INTEGER" key="end_frame" val="60"/></ActionObject>
+        <SceneWord lower="399" upper="401" text="So"/>
       </SceneUttr>
     </SceneTurn>
   </SceneObject>

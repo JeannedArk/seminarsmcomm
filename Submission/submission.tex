@@ -115,15 +115,17 @@ To make the communication work, there is a class implemented in Visual SceneMake
 \subsection{Blender}
 In Blender we needed an abstract class which represents the activities modeled in SceneMaker. This class is implemented by the two subclasses  ActionActivity and SpeechActivity, to be consistent to the SceneMaker implementation. For executing the activities we used the command pattern. Currently, only the executing of ActionActivities is implemented.\\
 For the communication we implemented a module called SceneMakerCommunication. Here, the data from the current running Visual SceneMaker instance is recieved and mapped to the ActionActivity or the SpeechActivity class. For communication it creates a socket with the defined configuration. The retrieved
-activities will be further propagated to Blender. The retrieving of the data is outsourced to another thread. Incoming data is stored by this thread in a threadsafe queue. The update method in the communication module pops the oldest activity from the queue and executes it, if existing.
+activities will be further propagated to Blender. The retrieving of the data is outsourced to another thread.\\
+Incoming data is stored by this thread in a threadsafe queue. The update method in the communication module pops the oldest activity from the queue and executes it, if existing. Additionally the action is only played if no other action of this object is currently not playing an action. Otherwise actions would interfere with each other and stop playing the old one. Therefore we had to extend the standard python 3 threadsafe queue with a peek operation, because the standard queue only implements a get function, which automatically pops the action. The PeekQueue allows us to check the potential next action in the queue without removing it.
 
 %----------------------------------------------------------------------------------------
 %	RESULTS AND DISCUSSION
 %----------------------------------------------------------------------------------------
 
 \section{Results and Future Work}
-The result of our work is a flexible and powerful solution for the communication from Visual SceneMaker to Blender. So far, only action activities of the actors were implemented as actions in Blender. Speech activities are currently sent and recognized as speech, but not interpreted as actions by the avatars in Blender. In order to do that, an integration of a Text-to-Speech software, like for example MaryTTS in Blender would be necessary. \\
-For evaluation, we performed a stress test with a scene in which events will be sent every 5 ms. The result showed that it performed on a local machine very fast, so that there was no recognizable delay in receiving the events. The communication protocol can be variably extended. Communication can be set to arbitrary network addresses.
+So far, only action activities of the actors were implemented as actions in Blender. Speech activities are currently sent and recognized as speech, but not interpreted as actions by the avatars in Blender. In order to do that, an integration of a Text-to-Speech software, like for example MaryTTS in Blender would be necessary. \\
+For evaluation, we performed a stress test with a scene in which events will be sent every 5 ms. The result showed that it performed very fast on a local machine, so that there was no recognizable delay in receiving the events. Also the communication protocol can be variably extended andsent to arbitrary network addresses.\\
+Altogether the result of our work is a flexible and powerful solution to communicate between Visual SceneMaker and Blender.
 
 
 \end{document}

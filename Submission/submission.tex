@@ -32,6 +32,7 @@ BCOR 0mm, % Binding correction
 \input{structure.tex} % Include the structure.tex file which specified the document structure and layout
 
 \hyphenation{Fortran hy-phen-ation} % Specify custom hyphenation points in words with dashes where you would like hyphenation to occur, or alternatively, don't put any dashes in a word to stop hyphenation altogether
+
 \usepackage{geometry}
 \geometry{
   left=3cm,
@@ -105,6 +106,23 @@ $ sh start.sh
 \item Visual SceneMaker will automatically open. Click „Open a project“ > select the „UDPForwarder“ project provided in the cloned repository > click the „select“ button > click the Play button
 \item Now you can see the character moving in Blender to the corresponding actions defined by the graph.
 \end{enumerate}
+\begin{figure}
+\centering
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.9\linewidth]{Figures/lightsOn.png}
+  \caption{Scene with lights on.}
+  \label{fig:sub1}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.9\linewidth]{Figures/lightsOff.png}
+  \caption{Scene with lights off and performing action "scratch dust"}
+  \label{fig:sub2}
+\end{subfigure}
+\caption{The avatar in Blender on the right and the corresponding scene in Visual SceneMaker on the left}
+\label{fig:test}
+\end{figure}
 
 %------------------------------------------------
 

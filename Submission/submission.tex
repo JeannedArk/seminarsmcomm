@@ -26,12 +26,20 @@ oneside,
 %twocolumn, % One page layout (no page indentation)
 %twoside, % Two page layout (page indentation for binding and different headers)
 headinclude,footinclude, % Extra spacing for the header and footer
-BCOR5mm, % Binding correction
+BCOR 0mm, % Binding correction
 ]{scrartcl}
 
 \input{structure.tex} % Include the structure.tex file which specified the document structure and layout
 
 \hyphenation{Fortran hy-phen-ation} % Specify custom hyphenation points in words with dashes where you would like hyphenation to occur, or alternatively, don't put any dashes in a word to stop hyphenation altogether
+\usepackage{geometry}
+\geometry{
+  left=3cm,
+  right=3cm,
+  top=2cm,
+  bottom=4cm,
+  bindingoffset=5mm
+}
 
 %----------------------------------------------------------------------------------------
 %	TITLE AND AUTHOR(S)
@@ -102,17 +110,14 @@ $ sh start.sh
 
 \section{Implementation}
 Our implementation presupposes some constraints especially in the naming of actions and avatars in order to work correctly.
-One constraint is, that the name of avatar, which should perform the action, is the same in Blender and Visual SceneMaker. Another one is, that the actions must be named the same in both programs. %Noch was ?
-
-\subsection{Design Choices}
+One constraint is, that the name of avatar, which should perform the action, is the same in Blender and Visual SceneMaker. Another one is, that the actions must be named the same in both programs.
+\subsection*{Design Choices}
 Together with our implementation we had to make several design choices.\\
 We decided to use JSON as a transport format, because it is a well known and light-weight format. Another very important fact is, that there is no need for manual parsing of the retrieved string messages on python side.\\
 Furthermore we used a command pattern to execute the activities, because of the high grade of flexibility and dynamic and therefore it builds the base for an easy maintenance and extension in the future. Programmatically spoken the command pattern bewares the concept of separation of concerns.
-
-\subsection{Visual SceneMaker}
+\subsection*{Visual SceneMaker}
 To make the communication work, there is a class implemented in Visual SceneMaker called UDPForwarder. It parses the information from the scenes in SceneMaker in action activities and speech activities and sends them, formalized as strings in JSON representation to the localhost address on port 2300. This can be easily changed to other desired addresses and ports.
-
-\subsection{Blender}
+\subsection*{Blender}
 In Blender we needed an abstract class which represents the activities modeled in SceneMaker. This class is implemented by the two subclasses  ActionActivity and SpeechActivity, to be consistent to the SceneMaker implementation. For executing the activities we used the command pattern. Currently, only the executing of ActionActivities is implemented.\\
 For the communication we implemented a module called SceneMakerCommunication. Here, the data from the current running Visual SceneMaker instance is recieved and mapped to the ActionActivity or the SpeechActivity class. For communication it creates a socket with the defined configuration. The retrieved
 activities will be further propagated to Blender. The retrieving of the data is outsourced to another thread.\\

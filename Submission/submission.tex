@@ -77,26 +77,25 @@ BCOR5mm, % Binding correction
 \section{Introduction}
 
 In the context of the seminar "Software design and architectures for interactive avatars: a hands-on approach" we developed an integration of Visual SceneMaker\footnote{\url{http://scenemaker.dfki.de/}} in Blender \footnote{\url{https://www.blender.org/}}.
-Visual SceneMaker is a software for creating interactive presentations specialized to non-programming users and Blender is a open source 3D creation suite.\\
-The integration is about mainly about avatar animation. It is possible, to create scenes in Visual SceneMaker with actors, speech and actions. The action and speech together with some information and the corresponding actor will be send to blender, where an avatar (with the same name as the actor in SceneMaker) performs the actions whenever a message from SceneMaker is retrieved. An actor can be an avatar itself, or objects in the environment, for example a light that can be on, off or dimmed.
+Visual SceneMaker is a software for creating interactive presentations specialized to users with no programming experience and Blender is a open source 3D creation suite.\\
+The integration is mainly about avatar animation. It is possible, to create scenes in Visual SceneMaker with actors, speeches and actions. These defined action and speech activities will be sent via a UDP socket connection to Blender, in which actors perform the actions whenever a message from SceneMaker is retrieved. An actor can be an avatar itself or objects in the environment, for example a light that can be turned on, off or dimmed.
 %----------------------------------------------------------------------------------------
 %	MANUAL
 %----------------------------------------------------------------------------------------
 
 \section{Manual}
-In order to make the integration of Visual SceneMaker in Blender work, please follow the steps below.
+In order to make the integration of Visual SceneMaker in Blender work, please follow the steps below:
 \begin{enumerate}[noitemsep] % [noitemsep] removes whitespace between the items for a compact look
-\item Change to your terminal
+\item Change to your terminal.
 \item Execute the following commands inside the terminal:
 \begin{lstlisting}
 $ git clone git@github.com:JeannedArk/seminarsmcomm.git
 $ cd ./seminarsmcomm
 $ sh start.sh
 \end{lstlisting}
-\item Close the Blender window with the default setup. Select the Blender window with Anna as character. Press „P“, the game mode starts.
-\item Visual SceneMaker will automatically open. Click „Open a project“ > select the „UDPForwarder“ project > click the „select“ button
-\item Click the Play button
-\item Now you can see the character moving to the corresponding actions defined by the graph.
+\item Close the Blender window with the default setup. Select the Blender window with Anna as character. Press „P“ to start the game mode.
+\item Visual SceneMaker will automatically open. Click „Open a project“ > select the „UDPForwarder“ project provided in the cloned repository > click the „select“ button > click the Play button
+\item Now you can see the character moving in Blender to the corresponding actions defined by the graph.
 \end{enumerate}
 
 %------------------------------------------------
@@ -107,14 +106,14 @@ One constraint is, that the name of avatar, which should perform the action, is 
 
 \subsection{Design Choices}
 Together with our implementation we had to make several design choices.\\
-We decided to JSON because it is a well known and light weight format. Another very important fact is, that there is no need for manual parsing of the retrieved strings messages on python side.\\
-We used a command pattern to execute the activities, because of the high grade of flexibility and dynamic and therefore it builds the base for an easy maintenance and extension in the future. Programmatically spoken the command pattern bewares the concept of separation of concerns.
+We decided to use JSON as a transport format, because it is a well known and light-weight format. Another very important fact is, that there is no need for manual parsing of the retrieved string messages on python side.\\
+Furthermore we used a command pattern to execute the activities, because of the high grade of flexibility and dynamic and therefore it builds the base for an easy maintenance and extension in the future. Programmatically spoken the command pattern bewares the concept of separation of concerns.
 
 \subsection{Visual SceneMaker}
-To make the communication work, there is a class implemented in Visual SceneMaker called UDPForwarder. It parses the information from the scenes in SceneMaker in action activities and speech activities and sends them, formalized as strings in JSON representation, to all known broadcast addresses on this machine. 
+To make the communication work, there is a class implemented in Visual SceneMaker called UDPForwarder. It parses the information from the scenes in SceneMaker in action activities and speech activities and sends them, formalized as strings in JSON representation to the localhost address on port 2300. This can be easily changed to other desired addresses and ports.
 
 \subsection{Blender}
-In Blender we needed an abstract class which represents the activities modeled in SceneMaker. This class is implemented by the two subclasses  ActionActivity and SpeechActivity, similar to SceneMaker. For executing the activities we use a command pattern. Currently, only the executing of ActionActivities is implemented.\\
+In Blender we needed an abstract class which represents the activities modeled in SceneMaker. This class is implemented by the two subclasses  ActionActivity and SpeechActivity, to be consistent to the SceneMaker implementation. For executing the activities we used the command pattern. Currently, only the executing of ActionActivities is implemented.\\
 For the communication we implemented a module called SceneMakerCommunication. Here, the data from the current running Visual SceneMaker instance is recieved and mapped to the ActionActivity or the SpeechActivity class. For communication it creates a socket with the defined configuration. The retrieved
 activities will be further propagated to Blender. The retrieving of the data is outsourced to another thread. Incoming data is stored by this thread in a threadsafe queue. The update method in the communication module pops the oldest activity from the queue and executes it, if existing.
 
@@ -123,7 +122,7 @@ activities will be further propagated to Blender. The retrieving of the data is 
 %----------------------------------------------------------------------------------------
 
 \section{Results and Future Work}
-The result of our work is a flexible and powerful solution for the communication from Visual SceneMaker to Blender. So far, only action activities of the actors were implemented as actions in Blender. Speech activities are currently sent and recognized as speech, but not interpreted as actions by the avatars in Blender. In order to do that, an integration of a Text-to-Speech software, like for example MaryTTS in blender would be necessary. \\
+The result of our work is a flexible and powerful solution for the communication from Visual SceneMaker to Blender. So far, only action activities of the actors were implemented as actions in Blender. Speech activities are currently sent and recognized as speech, but not interpreted as actions by the avatars in Blender. In order to do that, an integration of a Text-to-Speech software, like for example MaryTTS in Blender would be necessary. \\
 For evaluation, we performed a stress test with a scene in which events will be sent every 5 ms. The result showed that it performed on a local machine very fast, so that there was no recognizable delay in receiving the events. The communication protocol can be variably extended. Communication can be set to arbitrary network addresses.
 
 
